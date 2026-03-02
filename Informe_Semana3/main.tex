@@ -78,6 +78,7 @@ jjsoto1222@estudiantec.cr}}
 
 \begin{abstract}
 
+
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -99,13 +100,64 @@ jjsoto1222@estudiantec.cr}}
 
 \subsection{Definición del problema}
 
+En Costa Rica, el uso de la bicicleta para actividades recreativas, deportivas y de movilidad alternativa ha experimentado un crecimiento sostenido en los últimos años, especialmente en modalidades como el ciclismo de montaña y el ciclismo de aventura. Estas actividades suelen desarrollarse en zonas rurales, costeras y montañosas del país, donde las condiciones geográficas pueden limitar la disponibilidad y estabilidad de los servicios de telecomunicaciones móviles.
+
+Aunque el país presenta altos niveles de cobertura móvil a nivel poblacional, la Superintendencia de Telecomunicaciones (SUTEL) \cite{sutel} reporta variaciones significativas en el indicador de “precisión de cobertura 4G” entre provincias y operadores durante el año 2025. A nivel nacional, los resultados muestran valores de 93,8 \% para Liberty, 84,8 \% para Claro y 71,8 \% para Kölbi, siendo el margen reglamentario establecido del 90 \%. 
+
+Al analizar el comportamiento provincial, se observa que en regiones costeras como Guanacaste, Puntarenas y Limón los valores tienden a disminuir. En el caso de Kölbi, por ejemplo, se registran valores de 64,2 \% en Guanacaste, 67,9 \% en Puntarenas y 51,1 \% en Limón. Estos datos evidencian que la cobertura real medida en campo no siempre coincide con la cobertura publicada por los operadores, particularmente en zonas fuera del Valle Central.
+
+Si bien estos indicadores no implican ausencia total de señal, sí reflejan una variabilidad territorial en la calidad y confiabilidad del servicio móvil 4G. Para aplicaciones críticas como el rastreo en tiempo real, especialmente en entornos de montaña o rutas alejadas de centros urbanos, esta variabilidad puede representar una limitación significativa cuando se utilizan dispositivos dependientes exclusivamente de infraestructura celular comercial.
+
+En este contexto, surge la necesidad de explorar soluciones alternativas de comunicación de largo alcance y bajo consumo energético que no dependan directamente de redes móviles tradicionales. La tecnología LoRa, combinada con el protocolo APRS, permite implementar un sistema de rastreo autónomo, capaz de operar en bandas ISM y con menor dependencia de infraestructura comercial, lo que la convierte en una opción viable para aplicaciones de localización en zonas con cobertura celular ineficiente.
+
 \subsection{Justificación técnica}
+
+La solución propuesta se fundamenta en la implementación de un sistema de rastreo basado en tecnología LoRa y el protocolo APRS, como alternativa a los sistemas convencionales dependientes de redes móviles celulares.
+
+Los sistemas de rastreo tradicionales utilizan módulos GSM/GPRS o LTE para transmitir información de posicionamiento GPS hacia servidores remotos \cite{GPS}. Si bien estos sistemas ofrecen amplia cobertura en zonas urbanas, su funcionamiento depende completamente de la infraestructura de los operadores móviles, lo cual puede representar una limitación en regiones donde la cobertura presenta variabilidad territorial. Además, estos dispositivos suelen implicar mayor consumo energético y costos asociados a planes de datos.
+
+La tecnología LoRa emplea modulación de espectro ensanchado tipo Chirp Spread Spectrum (CSS), permitiendo comunicaciones de largo alcance con bajo consumo energético y alta sensibilidad de recepción. Estas características la hacen especialmente adecuada para aplicaciones en entornos rurales o montañosos, donde se requiere cobertura extendida y autonomía prolongada. A diferencia de las soluciones celulares, LoRa puede operar en bandas ISM sin depender de infraestructura comercial de telecomunicaciones \cite{ISM}.
+
+Por su parte, el protocolo APRS proporciona un mecanismo estandarizado para la transmisión de información de posicionamiento y telemetría en redes de radio. Su arquitectura permite integrar comunicaciones locales de radiofrecuencia con redes IP a través de servidores APRS-IS, posibilitando la visualización de dispositivos en plataformas de monitoreo en tiempo real.
+
+La combinación de LoRa y APRS permite desarrollar un sistema de rastreo de bajo consumo, modular y escalable, que es capaz de transmitir información de ubicación sin requerir conectividad celular directa en cada dispositivo. Para ello, el desarrollo de un firmware específico para módulos tracker resulta fundamental para gestionar la adquisición de datos GPS, la construcción de tramas APRS, la configuración de parámetros físicos de LoRa y la transmisión eficiente de paquetes.
 
 \subsection{Alcance del proyecto}
 
+El presente proyecto tiene como alcance el diseño e implementación del firmware de un módulo tracker basado en tecnología LoRa y protocolo APRS, orientado a la transmisión de información de posicionamiento GPS en zonas con cobertura celular no homogénea.
+
+El desarrollo contempla la programación del microcontrolador encargado de gestionar los siguientes procesos:
+
+\begin{itemize}
+  \item Adquisición de datos de posicionamiento mediante módulo GPS.
+  \item Construcción de tramas conforme al formato APRS.
+  \item Configuración y control del módulo de comunicación LoRa.
+  \item Transmisión periódica de paquetes de datos hacia la red LoRa.
+  \item Gestión básica de consumo energético del dispositivo.
+\end{itemize}
+
+Asimismo, el proyecto incluye la integración del firmware con el hardware asignado (módulo basado en ESP32 con chip LoRa), la validación funcional mediante pruebas de transmisión y la verificación de publicación de datos en plataformas de monitoreo APRS a través de un iGate previamente implementado por otro grupo del curso.
+
+El resultado esperado consiste en un firmware funcional, documentado y versionado en un repositorio GitHub, capaz de transmitir información de ubicación de manera estable dentro del entorno de pruebas definido para el curso.
+
 \subsection{Objetivos}
 
+\textbf{Objetivo general}\newline
+Desarrollar e implementar el firmware de un módulo tracker basado en tecnología LoRa y protocolo APRS, capaz de adquirir datos de posicionamiento GPS y transmitirlos de forma confiable para su visualización en la red APRS, como alternativa de rastreo en zonas con cobertura celular ineficiente.
+
+\textbf{Objetivos específicos}
+\begin{itemize}
+  \item Analizar los fundamentos del protocolo APRS y la modulación LoRa para definir los parámetros de comunicación adecuados al entorno de operación.
+  \item Diseñar y programar el generador de tramas conforme al formato APRS para la transmisión de información de posicionamiento.
+  \item Implementar la lectura y procesamiento de datos provenientes de un módulo GPS para la obtención de coordenadas geográficas y variables asociadas.
+  \item Configurar y controlar el módulo de comunicación LoRa, definiendo parámetros como frecuencia de operación, Spreading Factor, Bandwidth y Coding Rate.
+  \item Integrar los módulos de adquisición, procesamiento y transmisión en una arquitectura de firmware estructurada y modular.
+  \item Validar el funcionamiento del sistema mediante pruebas de transmisión y verificación de visualización en plataformas de monitoreo APRS.
+  \item Documentar el desarrollo del firmware en un repositorio GitHub, asegurando control de versiones del trabajo colaborativo.
+\end{itemize}
+
 \subsection{Diagrama de Gantt}
+
 
 
 \section{Conclusiones}
