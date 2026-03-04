@@ -1,5 +1,5 @@
 # Grupo7_Tracker5
-##Referencias
+## Referencias
 Alonso-Zárate, J. (s.f.). Sistemas de comunicación en la banda ISM (PID_00247330). Universitat Oberta de Catalunya. URL
 Augustin, A., Yi, J., Clausen, T., & Townsley, W. M. (2016). A study of LoRa: Long range & low power networks for the Internet of Things. Sensors (Basel), 16(9), 1466. https://doi.org/10.3390/s16091466
 Garcia-Munoz, J., García-Armada, A., Casanova-Mateo, C., & Mora-Medina, P. (2023). A progressive evaluation of MIMO techniques in LoRa-type wireless sensor networks under imperfect channel state information. Sensors (Basel), 23(15), Article 7801. https://doi.org/10.3390/s23157801
