@@ -1,6 +1,13 @@
 # Grupo7_Tracker5
-##APRS
-##LoRa
+## APRS
+El APRS (Automatic packet reporting system) es un canal de información de comunicaciones bidireccionales en tiempo real para radioaficionados con la capacidad de monitorear un areá en especifico por al menos 10 a 30 min y obtener información . Algunos de sus aplicaciones implica la obtención de boletines, mensajes, alertas, información meteorológica, un mapa de toda esta actividad, incluyendo objetos, frecuencias, satélites, redes, reuniones.
+
+Como el APRS es un sistema de comunicación a nivel global este tiene una frecuencia diferente dependiendo de la región
+ En Norte America y dedicado al continente entero: 144.39 MHz. 
+ En Europe: 144.80 
+ Australia: 145.175 MHz.
+
+## LoRa
 LoRa (Long Range) es una tecnología de modulación por espectro ensanchado para comunicación inalámbrica, caracterizada por su largo alcance y bajo consumo de energía. Utiliza una técnica basada en Chirp Spread Spectrum (CSS), lo que le permite operar con alta sensibilidad del receptor y buena resistencia a interferencias.
 
 LoRaWAN es el protocolo que utiliza la capa física LoRa para implementar redes de área amplia de bajo consumo (LPWAN, Low Power Wide Area Network). La tecnología LoRa fue desarrollada por Semtech, mientras que el estándar LoRaWAN es definido por la LoRa Alliance.
@@ -24,7 +31,7 @@ Las capacidades de LoRa permiten su uso en múltiples aplicaciones, especialment
 - Monitoreo de fauna en lugares remotos.
 - Aplicaciones en ciudades inteligentes.
 
-##Legislación Costarricense
+## Legislación Costarricense
 
 ##Referencias
 Alonso-Zárate, J. (s.f.). Sistemas de comunicación en la banda ISM (PID_00247330). Universitat Oberta de Catalunya. URL
