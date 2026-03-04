@@ -91,6 +91,23 @@ jjsoto1222@estudiantec.cr}}
 \section{Marco teórico}
 
 \subsection{APRS}
+\section{APRS}
+
+El APRS (\textit{Automatic Packet Reporting System}) es un sistema de comunicaciones digitales bidireccionales en tiempo real utilizado por radioaficionados. Permite monitorear un área específica durante periodos prolongados y transmitir información de posición, mensajes y datos de telemetría. 
+
+Entre sus aplicaciones se incluyen la transmisión de boletines, mensajes, alertas, información meteorológica y la visualización en mapas de la actividad en tiempo real, incluyendo estaciones, objetos, frecuencias, satélites, redes y eventos.
+
+\subsubsection{Protocolo APRS}
+
+APRS utiliza tramas AX.25 en modo UI, funcionando como un protocolo no orientado a conexión, sin confirmaciones de recepción ni reintentos tradicionales. En lugar de ello, emplea un algoritmo de retransmisión decreciente, donde cada paquete se transmite varias veces aumentando progresivamente el intervalo entre envíos, priorizando la información nueva sobre la antigua. El tiempo máximo de actualización, denominado Net Cycle Time, depende del número de digipeaters utilizados en 10 minutos para ninguno o un salto, 20 minutos para dos saltos y 30 minutos para tres o más, garantizando que la información sea retransmitida al menos una vez dentro de ese periodo.
+
+Dado que APRS es un sistema de alcance global, la frecuencia de operación varía según la región:
+
+\begin{itemize}
+    \item \textbf{Norteamérica}: 144.39 MHz (frecuencia estándar para el continente).
+    \item \textbf{Europa}: 144.80 MHz.
+    \item \textbf{Australia}: 145.175 MHz.
+\end{itemize}
 
 \subsection{LoRa}
 
@@ -122,6 +139,15 @@ Las capacidades de LoRa permiten su uso en múltiples aplicaciones, especialment
 \end{itemize}
 
 \subsection{Lesgislación Costarricense}
+
+El plan nacional de atribución de frecuencia (PNAF) se dio mediante el de Ejecutivo N° 44010-MICITT, publicado en el Alcance N° 99 al Diario Oficial La Gaceta N°95 de fecha 30 de mayo de 2023. con el objetivo de controlar y regular el uso de la frecuencias de uso libre o de pago en la región de Costa Rica.
+Al ser un recurso escaso se aplico el articulo 10 la ley N° 8642 "Ley General de Telecomunicaciones" determina que el PNAF designara las atribuciones específicas para una de las bandas radioelectricas y tambien ciertas condiciones de operación de sistemas en banda de frecuencias.
+
+Otra de las codiciones que tiene el PNAF son los criterios a partir del trabajo conjunto entre funcionarios de la Dirección de
+Espectro Radioeléctrico y Redes de Telecomunicaciones del Viceministerio de
+Telecomunicaciones del MICITT, y la Dirección General de Calidad de la
+Superintendencia de Telecomunicaciones (SUTEL).
+
 
 \section{Planeamiento del proyecto}
 
