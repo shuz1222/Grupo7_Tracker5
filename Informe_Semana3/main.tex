@@ -92,13 +92,13 @@ jjsoto1222@estudiantec.cr}}
 
 \subsection{APRS}
 
-El APRS (\textit{Automatic Packet Reporting System}) es un sistema de comunicaciones digitales bidireccionales en tiempo real utilizado por radioaficionados. Permite monitorear un área específica durante periodos prolongados y transmitir información de posición, mensajes y datos de telemetría. Este tecnología es de uso gratuito y no necesita licencia y es por eso que es usado de muchas maneras al rededor del mundo con toda clases de fines. 
+El APRS (\textit{Automatic Packet Reporting System}) es un sistema de comunicaciones digitales bidireccionales en tiempo real utilizado por radioaficionados. Permite monitorear un área específica durante períodos prolongados y transmitir información de posición, mensajes y datos de telemetría. Esta tecnología es de uso gratuito; sin embargo, sí requiere licencia de radioaficionado para operar en las bandas asignadas a este servicio.
 
 Entre sus aplicaciones se incluyen la transmisión de boletines, mensajes, alertas, información meteorológica y la visualización en mapas de la actividad en tiempo real, incluyendo estaciones, objetos, frecuencias, satélites, redes y eventos.
 
 \subsubsection{Protocolo APRS}
 
-APRS utiliza tramas AX.25 en modo UI, funcionando como un protocolo no orientado a conexión, sin confirmaciones de recepción ni reintentos tradicionales. En lugar de ello, emplea un algoritmo de retransmisión decreciente, donde cada paquete se transmite varias veces aumentando progresivamente el intervalo entre envíos, priorizando la información nueva sobre la antigua. El tiempo máximo de actualización, denominado Net Cycle Time, depende del número de digipeaters utilizados en 10 minutos para ninguno o un salto, 20 minutos para dos saltos y 30 minutos para tres o más, garantizando que la información sea retransmitida al menos una vez dentro de ese periodo.
+APRS utiliza tramas AX.25 en modo UI, funcionando como un protocolo no orientado a conexión, sin confirmaciones de recepción ni reintentos tradicionales. En lugar de ello, emplea un algoritmo de retransmisión decreciente, donde cada paquete se transmite varias veces aumentando progresivamente el intervalo entre envíos, priorizando la información nueva sobre la antigua. El tiempo máximo de actualización, denominado Net Cycle Time, depende del número de digipeaters utilizados: 10 minutos para ninguno o un salto, 20 minutos para dos saltos y 30 minutos para tres o más, garantizando que la información sea retransmitida al menos una vez dentro de ese período.
 
 Dado que APRS es un sistema de alcance global, la frecuencia de operación varía según la región:
 
@@ -108,11 +108,18 @@ Dado que APRS es un sistema de alcance global, la frecuencia de operación varí
     \item \textbf{Australia}: 145.175 MHz.
 \end{itemize}
 
+El APRS tiene varios componentes que permiten el funcionamiento de este sistema inalámbrico para transmitir y distribuir información en tiempo real. Entre ellos se pueden mencionar los dispositivos del usuario, los encargados de la retransmisión y expansión de datos, la conexión a Internet y los servidores.
 
+\begin{itemize}
+    \item \textbf{Usuario}: Radios.
+    \item \textbf{Digipeaters}: Permiten la captura y envío de la retransmisión de datos a los diferentes dispositivos.
+    \item \textbf{iGates}: Son la conexión entre los dispositivos APRS y el Internet.
+    \item \textbf{Servidores APRS-IS}: Reciben datos desde los iGates.
+\end{itemize}
 
 \subsection{LoRa}
 
-LoRa (Long Range) es una tecnología de modulación por espectro ensanchado para comunicación inalámbrica, caracterizada por su largo alcance y bajo consumo de energía. Utiliza una técnica basada en Chirp Spread Spectrum (CSS), lo que le permite operar con alta sensibilidad del receptor y buena resistencia a interferencias. El LoRa solo utiliza bandas libre lo que significa que no ncesita licencia para usarlo, lo que permite a las personas interactuar con ello de manera sencilla.
+LoRa (Long Range) es una tecnología de modulación por espectro ensanchado para comunicación inalámbrica, caracterizada por su largo alcance y bajo consumo de energía. Utiliza una técnica basada en Chirp Spread Spectrum (CSS), lo que le permite operar con alta sensibilidad del receptor y buena resistencia a interferencias. LoRa utiliza bandas de uso libre, lo que significa que no requiere licencia individual, siempre que se respeten los límites técnicos establecidos por la regulación.
 
 LoRaWAN es el protocolo que utiliza la capa física LoRa para implementar redes de área amplia de bajo consumo (LPWAN, Low Power Wide Area Network). La tecnología LoRa fue desarrollada por Semtech, mientras que el estándar LoRaWAN es definido por la LoRa Alliance.
 
@@ -132,37 +139,62 @@ LoRa opera en bandas ISM (Industrial, Scientific and Medical), que son de uso li
 Las capacidades de LoRa permiten su uso en múltiples aplicaciones, especialmente en el Internet of Things (IoT), tales como:
 
 \begin{itemize}
-    \item Agricultura inteligente como la irrigación y monitoreo de cultivos.
+    \item Agricultura inteligente, como la irrigación y el monitoreo de cultivos.
     \item Redes de sensores de bajo consumo.
     \item Sistemas de rastreo de dispositivos.
     \item Monitoreo de fauna en lugares remotos.
     \item Aplicaciones en ciudades inteligentes.
 \end{itemize}
 
-\subsection{Lesgislación Costarricense}
+\subsection{Legislación Costarricense}
 
-El plan nacional de atribución de frecuencia (PNAF) se dio mediante el Decreto Ejecutivo N° 44010-MICITT, publicado en el Alcance N° 99 al Diario Oficial La Gaceta N°95 de fecha 30 de mayo de 2023. con el objetivo de controlar y regular el uso de la frecuencias de uso libre o de pago en la región de Costa Rica.
-Al ser un recurso escaso se aplico el articulo 10 la ley N° 8642 "Ley General de Telecomunicaciones" determina que el PNAF designara las atribuciones específicas para una de las bandas radioelectricas y tambien ciertas condiciones de operación de sistemas en banda de frecuencias.
+El Plan Nacional de Atribución de Frecuencias (PNAF) se estableció mediante el Decreto Ejecutivo N° 44010-MICITT, publicado en el Alcance N° 99 al Diario Oficial La Gaceta N° 95, de fecha 30 de mayo de 2023, con el objetivo de regular el uso de las frecuencias de uso libre o concesionado en Costa Rica.
 
-Otra de las codiciones que tiene el PNAF son los criterios a partir del trabajo conjunto entre funcionarios de la Dirección de
-Espectro Radioeléctrico y Redes de Telecomunicaciones del Viceministerio de
-Telecomunicaciones del MICITT, y la Dirección General de Calidad de la
-Superintendencia de Telecomunicaciones (SUTEL).
+Al ser el espectro radioeléctrico un recurso escaso, se aplica el artículo 10 de la Ley N° 8642, "Ley General de Telecomunicaciones", que determina que el PNAF designará las atribuciones específicas para cada banda radioeléctrica y establecerá las condiciones de operación de los sistemas en dichas bandas.
 
-Para poder utilizar una frecuencia en Costa Rica se debe pasar por diferentes servicios. Como el uso de LoRa y APRS son sistema de comunicación de libre acceso, entonces se debe pasar por un proceso en especifico para informar a la entidades encargadas de que se usaran los diferentes bandas de frecuencias  esto mencionado por el Decreto Ejecutivo N° 44010 que menciona que todo uso de frecuencia por radio aficionados debe pasar por SUTEL. 
+Otra de las condiciones del PNAF es que sus criterios se establecen a partir del trabajo conjunto entre funcionarios de la Dirección de Espectro Radioeléctrico y Redes de Telecomunicaciones del Viceministerio de Telecomunicaciones del MICITT y la Dirección General de Calidad de la Superintendencia de Telecomunicaciones (SUTEL).
+
+Para poder utilizar una frecuencia en Costa Rica se debe pasar por diferentes instancias. En el caso de APRS, al operar en bandas de radioaficionados, se debe contar con licencia y cumplir con la normativa vigente. El Decreto Ejecutivo N° 44010 establece que todo uso de frecuencias en el servicio de radioaficionados debe cumplir con la regulación correspondiente y supervisión de SUTEL.
 
 \begin{itemize}
     \item El interesado presenta la solicitud de permiso de uso de frecuencia ante el Viceministerio de Telecomunicaciones del MICITT (Poder Ejecutivo).
-    
     \item El Poder Ejecutivo remite la solicitud a la SUTEL para la emisión del dictamen técnico correspondiente.
-    
     \item La SUTEL analiza la información presentada, elabora el dictamen técnico requerido y lo envía nuevamente al Poder Ejecutivo.
-    
     \item El Poder Ejecutivo resuelve la solicitud con base en el dictamen técnico y conforme a la legislación vigente, otorgando o denegando el permiso respectivo.
-    
     \item Finalmente, el interesado recibe la notificación oficial por parte del Poder Ejecutivo sobre la resolución de la solicitud presentada.
 \end{itemize}
 
+También se puede solicitar el permiso de radioaficionado establecido en el Reglamento General para la Regulación de los Trámites del Servicio de Radioaficionados y Afines (RGRR), Decreto N° 40639-MICITT, publicado en el Diario Oficial La Gaceta según Alcance N° 246 del 13 de octubre de 2017. En Costa Rica existen dos requisitos para operar en las bandas de radioaficionados:
+
+\begin{itemize}
+    \item Obtener una licencia de radioaficionado.
+    \item Obtener un permiso de uso del espectro radioeléctrico para el servicio de radioaficionado y/o la operación de la banda ciudadana.
+\end{itemize}
+
+\subsection{Clases de emisión (Modulación)}
+
+Las clases de emisión definen el tipo de modulación, la naturaleza de la señal y el tipo de información transmitida.
+
+\begin{itemize}
+    \item \textbf{LoRa:} Utiliza modulación de espectro ensanchado basada en Chirp Spread Spectrum (CSS). Su clasificación puede asociarse a emisiones digitales de datos.
+    \item \textbf{APRS:} Utiliza modulación AFSK a 1200 bps bajo el protocolo AX.25 en VHF. Su clase de emisión corresponde a transmisión digital de datos.
+\end{itemize}
+
+\subsection{Bandas de frecuencias de operación}
+
+\begin{itemize}
+    \item \textbf{LoRa:} Opera en la banda ISM de 902-928 MHz en la región de América.
+    \item \textbf{APRS:} Opera principalmente en la banda de 2 metros (VHF), típicamente 144.39 MHz en América.
+\end{itemize}
+
+\subsection{PIRE permitida}
+
+La Potencia Isotrópica Radiada Equivalente (PIRE) permitida depende de la banda y del servicio atribuido según el PNAF.
+
+\begin{itemize}
+    \item En bandas ISM (LoRa), la PIRE está limitada por la regulación técnica específica.
+    \item En bandas de radioaficionados (APRS), la potencia máxima depende de la categoría de licencia del operador y de las disposiciones del reglamento vigente.
+\end{itemize}
 \section{Planeamiento del proyecto}
 
 \subsection{Definición del problema}
