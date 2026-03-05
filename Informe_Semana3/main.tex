@@ -77,17 +77,23 @@ jjsoto1222@estudiantec.cr}}
 \maketitle
 
 \begin{abstract}
-
+En este trabajo se presenta el planteamiento y desarrollo inicial de un sistema de rastreo para bicicletas basado en tecnologías LoRa y APRS. El objetivo del proyecto es implementar el firmware de un módulo tracker capaz de adquirir datos de posicionamiento mediante GPS y transmitirlos de forma periódica utilizando comunicación LoRa. La propuesta busca ofrecer una alternativa de monitoreo en zonas donde la cobertura de redes celulares es limitada o inexistente. Durante esta etapa se realizó la investigación de las tecnologías involucradas, el análisis de la problemática, la definición del alcance y objetivos del proyecto, así como la planificación de las actividades mediante un diagrama de Gantt y la organización del repositorio de desarrollo.
 
 \end{abstract}
 
 \begin{IEEEkeywords}
 
+APRS, GPS, LoRa, módulo, SUTEL.
+
 \end{IEEEkeywords}
 
 \section{Introducción}
 
+En los últimos años, el uso de sistemas de posicionamiento y monitoreo remoto ha incrementado significativamente en diversas aplicaciones, como logística, transporte y actividades recreativas. En particular, el ciclismo es una actividad que frecuentemente se desarrolla en zonas rurales o rutas alejadas de centros urbanos, donde la cobertura de redes celulares puede ser limitada o inexistente. Esta situación dificulta el monitoreo de la ubicación de los ciclistas en tiempo real, lo que puede representar un problema en caso de incidentes, pérdida de comunicación o situaciones de emergencia.
 
+Ante esta problemática, han surgido alternativas basadas en tecnologías de comunicación de largo alcance y bajo consumo energético. Entre ellas, la tecnología LoRa permite la transmisión de datos a distancias considerables sin depender de infraestructura celular, mientras que el protocolo APRS es ampliamente utilizado para el intercambio de información de posicionamiento a través de redes de radio. La combinación de estas tecnologías permite desarrollar sistemas de rastreo capaces de operar en entornos donde otros sistemas de comunicación presentan limitaciones.
+
+En este contexto, el presente proyecto tiene como objetivo el desarrollo del firmware de un módulo tracker capaz de adquirir datos de posicionamiento mediante un módulo GPS, procesarlos y transmitirlos periódicamente utilizando comunicación LoRa en formato compatible con APRS. De esta manera, se busca implementar una solución que permita el monitoreo de la ubicación de ciclistas en zonas con baja cobertura celular, aprovechando las ventajas de las comunicaciones de largo alcance y bajo consumo energético.
 \section{Marco teórico}
 
 \subsection{APRS}
@@ -224,20 +230,24 @@ Para la planificación correcta del proyecto se deben asignar tareas en el tiemp
 
 \subsection{Diagrama de Gantt}
 
-Para la realización del diagrama se hace uso de la numeración que se le brindó a cada actividad en el cronograma de actividades.
+Para la realización del diagrama se hace uso de la numeración que se le brindó a cada actividad en el cronograma de actividades, esta se presenta en la primera columna. El diagrama se puede apreciar en la Figura \ref{fig:gantt}
 
-\begin{figure}[h]
+
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=1\textwidth]{FIG/gantt.png}
+  \includegraphics[width=\textwidth]{FIG/gantt.png}
   \caption{Diagrama de Gantt del proyecto.}
   \label{fig:gantt}
   
-\end{figure}
+\end{figure*}
 
 
 \section{Conclusiones}
 
-
+\begin{itemize}
+    \item La investigación realizada permitió comprender los principios fundamentales de las tecnologías involucradas en el desarrollo del sistema de rastreo. En particular, se analizaron las características del protocolo APRS, la tecnología de comunicación LoRa y el funcionamiento de los sistemas de posicionamiento GPS. Asimismo, se revisaron aspectos regulatorios relacionados con el uso de radiofrecuencias en Costa Rica. A partir de este análisis se determinó que la combinación de estas tecnologías permite implementar una solución de monitoreo de posición capaz de operar en entornos donde la cobertura de redes celulares es limitada, lo cual resulta adecuado para aplicaciones como el seguimiento de bicicletas en rutas alejadas de centros urbanos.
+    \item El planeamiento del proyecto permitió definir de manera estructurada el alcance, los objetivos y las actividades necesarias para el desarrollo del firmware del módulo tracker. Mediante la elaboración de un cronograma de trabajo se establecieron las etapas de diseño, implementación, pruebas y documentación del sistema, lo que facilita la organización y seguimiento del avance del proyecto.
+\end{itemize}
 
 \section{Bibliografía}
 
