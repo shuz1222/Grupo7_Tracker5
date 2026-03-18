@@ -3,7 +3,7 @@
 ## Diagrama de bloques — Nivel 1
 Vista general del sistema con entradas y salidas principales.
 
-![Nivel 1](Diagrama primer nivel.svg)
+![Nivel 1](Diagrama%20primer%20nivel.svg)
 
 ### Entradas:
 -	Señal GPS: Señal de radiofrecuencia proveniente de los satélites GNSS, recibida por la antena GPS integrada del T-Beam.
@@ -18,7 +18,7 @@ Vista general del sistema con entradas y salidas principales.
 ## Diagrama de bloques — Nivel 2
 Módulos internos del sistema y flujo de datos entre ellos.
 
-![Nivel 2](Diagrama segundo nivel.svg)
+![Nivel 2](Diagrama%20segundo%20nivel.svg)
 
 ### Módulo de gestión de energía:
 Es un módulo pasivo respecto al flujo lógico del sistema. Su única responsabilidad es garantizar alimentación estable. No toma decisiones ni genera señales de control.
