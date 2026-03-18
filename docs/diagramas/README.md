@@ -30,3 +30,38 @@ Es el núcleo lógico del sistema. Ejecuta un bucle de lectura GPS con timeout d
 Recibe la trama APRS, la transmite con los parámetros LoRa configurados y notifica al procesamiento cuando la transmisión concluye.
 ### Módulo de control de ciclo:
 Al recibir la orden de sleep, configura el timer Real Time Clock (RTC) interno del ESP32 con el intervalo definido y ejecuta el deep sleep. El RTC es el único componente que permanece activo durante el reposo. Al cumplirse el tiempo, reinicia el ESP32 y el ciclo comienza nuevamente desde el procesamiento.
+
+# Máquina de estados del Firmware
+
+![maquina de estados](maquina_de_estados.svg)
+
+### Estados
+
+| Estado | Descripción |
+|---|---|
+| **INIT** | Inicialización del sistema: UART, I²C, AXP192, GPS y LoRa. Si falla alguna inicialización, el sistema hace reboot. |
+| **ESPERAR_GPS_FIX** | Lectura continua de tramas NMEA a 1 Hz. Se mantiene en este estado mientras las tramas indican sin fix (campo `V`) y el tiempo no supera los 60 segundos. |
+| **CONSTRUCCION_TRAMA_APRS** | Convierte los datos GPS al formato APRS y arma el paquete completo con callsign `TI0TEC-7`, símbolo y extensión de datos. |
+| **TRANSMITIR_LoRa** | Envía el paquete APRS por RF a 433.775 MHz mediante el chip SX1276. |
+| **DEEP_SLEEP** | El ESP32 apaga CPU, RAM y periféricos. Solo el RTC permanece activo contando 60 segundos. Al cumplirse, reinicia el sistema desde INIT. |
+
+### Transiciones
+
+| Desde | Hacia | Condición |
+|---|---|---|
+| Punto de entrada | INIT | Encendido o wakeup por RTC |
+| INIT | ESPERAR_GPS_FIX | Inicialización exitosa |
+| INIT | Punto de entrada | Error de inicialización (reinicio) |
+| ESPERAR_GPS_FIX | CONSTRUCCION_TRAMA_APRS | Trama NMEA con fix válido (`A`) antes del timeout |
+| ESPERAR_GPS_FIX | ESPERAR_GPS_FIX | Trama NMEA sin fix (`V`) y tiempo < 60s |
+| ESPERAR_GPS_FIX | DEEP_SLEEP | Timeout 60s sin fix |
+| CONSTRUCCION_TRAMA_APRS | TRANSMITIR_LoRa | Trama APRS construida |
+| TRANSMITIR_LoRa | DEEP_SLEEP | TX exitoso |
+| TRANSMITIR_LoRa | CONSTRUCCION_TRAMA_APRS | TX fallido (reintento) |
+| DEEP_SLEEP | Punto de entrada | Wakeup por RTC (60 segundos) |
+
+### Notas
+- El GPS permanece encendido durante el deep sleep ya que el intervalo
+  de 60 segundos no justifica el tiempo de reconexión que implicaría apagarlo.
+- El punto de entrada (ENCENDIDO / WAKEUP RTC) no es un estado como tal, es el punto de entrada para el funcionamiento del proceso.
+- El tiempo de reposo y de encendido es provicional, está sujeto a cambios según lo indiquen análisis posteriores.
