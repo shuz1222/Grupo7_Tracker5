@@ -31,6 +31,17 @@ Recibe la trama APRS, la transmite con los parámetros LoRa configurados y notif
 ### Módulo de control de ciclo:
 Al recibir la orden de sleep, configura el timer Real Time Clock (RTC) interno del ESP32 con el intervalo definido y ejecuta el deep sleep. El RTC es el único componente que permanece activo durante el reposo. Al cumplirse el tiempo, reinicia el ESP32 y el ciclo comienza nuevamente desde el procesamiento.
 
+## Diagrama de bloques - Nivel 3
+Expansión del procesamiento en el Firmware.
+
+![Nivel 3](Diagrama%20tercer%20nivel.svg)
+
+En este nivel se hace una ampliación del procesamiento del Firmware, donde se especifican los procesos que realiza. Esta inicia con la obtención de la trama NMEA proveniente del módulo GPS por medio de UART, donde posteriormente se realiza el parseo para obtener la información de interés, como las coordenadas y la señal de si existe "fix" o no. Esta última es la que se analiza para comprobar si se puede transmitir o no los datos obtenidos, donde si se obtiene A se dice que "hay fix", en caso de tener V en ese espacio, se dice que "no hay fix". 
+
+Del mismo Parser se pasa el resto de información necesaria para la creación de las tramas APRS en caso de que se pueda transmitir. Una vez se tiene la trama APRS se transmite por medio de SPI al módulo de LoRa, que es el encargado de realizar la transmisión por medio de la antena a 433.775 MHz.
+
+Todo esto se realiza respetando el control de ciclo especificado, donde más adelante por medio de la máquina de estados se puede apreciar mejor la secuencia del programa.
+
 # Máquina de estados del Firmware
 
 ![maquina de estados](maquina_de_estados.svg)
@@ -41,7 +52,7 @@ Al recibir la orden de sleep, configura el timer Real Time Clock (RTC) interno d
 |---|---|
 | **INIT** | Inicialización del sistema: UART, I²C, AXP192, GPS y LoRa. Si falla alguna inicialización, el sistema hace reboot. |
 | **ESPERAR_GPS_FIX** | Lectura continua de tramas NMEA a 1 Hz. Se mantiene en este estado mientras las tramas indican sin fix (campo `V`) y el tiempo no supera los 60 segundos. |
-| **CONSTRUCCION_TRAMA_APRS** | Convierte los datos GPS al formato APRS y arma el paquete completo con callsign `TI0TEC-7`, símbolo y extensión de datos. |
+| **CONSTRUCCION_TRAMA_APRS** | Convierte los datos GPS al formato APRS y arma el paquete completo con callsign `TI0TEC7-7`, símbolo y extensión de datos. |
 | **TRANSMITIR_LoRa** | Envía el paquete APRS por RF a 433.775 MHz mediante el chip SX1276. |
 | **DEEP_SLEEP** | El ESP32 apaga CPU, RAM y periféricos. Solo el RTC permanece activo contando 60 segundos. Al cumplirse, reinicia el sistema desde INIT. |
 
