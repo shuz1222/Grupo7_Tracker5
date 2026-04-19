@@ -21,7 +21,6 @@ Desarrollar el firmware de un dispositivo *tracker* que permita adquirir datos d
 - Implementar un parser para interpretar tramas NMEA.
 - Generar tramas de datos compatibles con el formato APRS.
 - Configurar y controlar la transmisión mediante un módulo LoRa.
-- Integrar los módulos de adquisición, procesamiento y transmisión en un sistema funcional.
 
 ---
 
@@ -65,10 +64,7 @@ Este proceso permite enviar la ubicación del dispositivo de forma continua util
     Código fuente del firmware del tracker
 
 /docs
-    Documentación técnica del proyecto
-
-/hardware
-    Diagramas o referencias del hardware utilizado
+    Documentación técnica del proyecto y diagramas
 
 /test
     Scripts o pruebas de funcionamiento
