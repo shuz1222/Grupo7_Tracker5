@@ -77,9 +77,9 @@ Todo esto se realiza respetando el control de ciclo especificado, donde más ade
 - El punto de entrada (ENCENDIDO / WAKEUP RTC) no es un estado como tal, es el punto de entrada para el funcionamiento del proceso.
 - El tiempo de reposo y de encendido es provicional, está sujeto a cambios según lo indiquen análisis posteriores.
 
-## Diagrama eléctrico
+# Diagrama eléctrico
 
-![Diagrama eléctrico](diagrama_electrico.pdf)
+![Diagrama eléctrico](diagrama_electrico.png)
 
 
 ### Descripción de conexiones
@@ -95,7 +95,7 @@ bus SPI utilizando los pines GPIO5 (SCK), GPIO19 (MISO), GPIO27
 (MOSI) y GPIO18 (CS). Adicionalmente, GPIO23 controla el reset del
 módulo y GPIO26 recibe la interrupción DIO0 que notifica al ESP32
 cuando una transmisión ha concluido. El módulo LoRa opera a
-433.775 MHz con una antena de 70 cm conectada al pin RF_OUT.
+433.775 MHz con una antena de 70 cm conectada a los pines RFO_LF y RFI_LF.
 
 **Bus UART1 — Módulo GPS NEO-M8N**
 La comunicación con el módulo GPS se realiza mediante UART1 a
