@@ -76,3 +76,75 @@ Todo esto se realiza respetando el control de ciclo especificado, donde más ade
   de 60 segundos no justifica el tiempo de reconexión que implicaría apagarlo.
 - El punto de entrada (ENCENDIDO / WAKEUP RTC) no es un estado como tal, es el punto de entrada para el funcionamiento del proceso.
 - El tiempo de reposo y de encendido es provicional, está sujeto a cambios según lo indiquen análisis posteriores.
+
+## Diagrama eléctrico
+
+![Diagrama eléctrico](diagrama_electrico.pdf)
+
+
+### Descripción de conexiones
+
+El sistema está compuesto por siete módulos interconectados sobre
+la placa T-Beam ESP32 V1.1. El ESP32-WROOM-32 actúa como unidad
+central de procesamiento y se comunica con los periféricos mediante
+tres buses distintos.
+
+**Bus SPI — Módulo LoRa SX1276**
+El ESP32 se comunica con el transceptor LoRa SX1276 mediante el
+bus SPI utilizando los pines GPIO5 (SCK), GPIO19 (MISO), GPIO27
+(MOSI) y GPIO18 (CS). Adicionalmente, GPIO23 controla el reset del
+módulo y GPIO26 recibe la interrupción DIO0 que notifica al ESP32
+cuando una transmisión ha concluido. El módulo LoRa opera a
+433.775 MHz con una antena de 70 cm conectada al pin RF_OUT.
+
+**Bus UART1 — Módulo GPS NEO-M8N**
+La comunicación con el módulo GPS se realiza mediante UART1 a
+9600 bps. El pin GPIO34 del ESP32 recibe las tramas NMEA
+transmitidas por el GPS (TX del GPS → RX del ESP32), y el pin
+GPIO12 transmite comandos de configuración hacia el GPS
+(TX del ESP32 → RX del GPS). La antena GPS externa se conecta
+al pin RF_IN del módulo.
+
+**Bus I²C — AXP192 PMU y pantalla OLED**
+El ESP32 se comunica con el gestor de energía AXP192 y la pantalla
+OLED SSD1306 mediante el bus I²C compartido en GPIO21 (SDA) y
+GPIO22 (SCL). El AXP192 gestiona la alimentación de todos los
+periféricos desde la batería 18650, distribuyendo 3.3V regulado
+al ESP32 (DCDC1), al módulo LoRa (LDO2), al GPS (LDO3) y a la
+pantalla OLED (DCDC3).
+
+**Bus UART0 — CP2104 USB-UART**
+El conversor CP2104 conecta el ESP32 con la PC mediante el puerto
+Micro-USB. GPIO1 (TX0) y GPIO3 (RX0) del ESP32 se conectan a los
+pines RXD y TXD del CP2104 respectivamente, permitiendo la
+programación del firmware desde PlatformIO y el monitoreo de
+mensajes de debug en tiempo real. La señal DTR del CP2104 está
+conectada al pin EN del ESP32 para habilitar el reset automático
+durante la programación.
+
+**Alimentación**
+La batería 18650 (~3.7V) alimenta al AXP192 a través del pin
+VBAT. El AXP192 regula y distribuye la energía a todos los
+módulos del sistema. El CP2104 se alimenta directamente del
+pin VBUS del conector Micro-USB (+5V) cuando está conectado
+a una PC.
+
+### Pines utilizados
+
+| GPIO | Función | Módulo | Bus |
+|---|---|---|---|
+| GPIO5 | SCK | SX1276 | SPI |
+| GPIO19 | MISO | SX1276 | SPI |
+| GPIO27 | MOSI | SX1276 | SPI |
+| GPIO18 | CS | SX1276 | SPI |
+| GPIO23 | RST | SX1276 | SPI |
+| GPIO26 | DIO0 | SX1276 | SPI |
+| GPIO34 | RX GPS | NEO-M8N | UART1 |
+| GPIO12 | TX GPS | NEO-M8N | UART1 |
+| GPIO21 | SDA | AXP192 + OLED | I²C |
+| GPIO22 | SCL | AXP192 + OLED | I²C |
+| GPIO1 | TX Debug | CP2104 | UART0 |
+| GPIO3 | RX Debug | CP2104 | UART0 |
+| GPIO4 | LED | Indicador | GPIO |
+| EN | Reset | CP2104 DTR | — |
+
