@@ -1,0 +1,11 @@
+# PlatformIO
+firmware/.pio/
+firmware/.vscode/
+
+# Python
+__pycache__/
+*.pyc
+
+# KiCad
+hardware/*-backups/
+hardware/_autosave*
