@@ -63,7 +63,6 @@
 #define MAX_TX_RETRIES      3       // Reintentos de transmisión
 #define OLED_INTERVAL       3000    // Alternancia de pantallas (ms)
 #define DATOS_FINALES_MS    5000    // Tiempo mostrando datos antes de sleep
-#define ESCUCHA_IGATES_MS   5000    // Tiempo escuchando iGates tras TX
 #define GPS_TIMEOUT_MS  60000   // 60 segundos
 
 // Frecuencia de CPU durante operación (ahorro de energía)
@@ -87,7 +86,6 @@ Adafruit_SSD1306  display(OLED_WIDTH, OLED_HEIGHT, &Wire, OLED_RESET);
 bool          oledDisponible      = false;   // TRUE si se detectó OLED
 bool          mostrarPantalla1    = true;    // TRUE = pantalla posición
 unsigned long ultimoCambioPantalla = 0;      // Para alternar pantallas
-String        ultimoIGate         = "NONE";  // Último iGate escuchado
 String        estadoSistema       = "Iniciando...";  // Texto de estado actual
 
 // --- ESTRUCTURA DE DATOS GPS ---
@@ -179,8 +177,6 @@ void mostrarEstadoSistema() {
     display.printf("Boot: #%d  TX: #%d", bootCount, txCount);
     display.setCursor(0, 40);
     display.printf("Bat: %.2fV", PMU.getBattVoltage() / 1000.0);
-    display.setCursor(0, 52);
-    display.printf("iGate: %s", ultimoIGate.c_str());
     display.display();
 }
 
@@ -499,51 +495,9 @@ bool transmitirLoRa(String trama) {
     return false;
 }
 
-//  RUTINA 11: ESCUCHAR IGATES
-//  Después de transmitir, escucha tráfico en la frecuencia
-//  para detectar iGates activos en rango.
-//  Retorna el callsign del primero que escuche, o "NONE".
-String escucharIGates() {
-    Serial.printf("[LoRa] Escuchando iGates por %d ms...\n",
-        ESCUCHA_IGATES_MS);
 
-    estadoSistema = "Escuchando...";
-    actualizarPantalla();
 
-    LoRa.receive();  // Poner SX1276 en modo recepción
-    unsigned long inicio = millis();
-
-    while (millis() - inicio < ESCUCHA_IGATES_MS) {
-        int paqueteSize = LoRa.parsePacket();
-
-        if (paqueteSize) {
-            String paquete = "";
-            while (LoRa.available()) {
-                paquete += (char)LoRa.read();
-            }
-
-            Serial.println("[LoRa Rx] Paquete: " + paquete);
-
-            // Extraer callsign del remitente
-            // Formato APRS: CALLSIGN>DEST,...
-            int separador = paquete.indexOf('>');
-            if (separador > 0) {
-                String callsignRx = paquete.substring(0, separador);
-                Serial.println("[LoRa Rx] iGate escuchado: " + callsignRx);
-                LoRa.idle();
-                return callsignRx;
-            }
-        }
-
-        actualizarPantalla();
-    }
-
-    LoRa.idle();  // Salir del modo recepción
-    Serial.println("[LoRa] Sin iGates escuchados");
-    return "NONE";
-}
-
-//  RUTINA 12: ENTRAR EN DEEP SLEEP
+//  RUTINA 11: ENTRAR EN DEEP SLEEP
 //  Pone el ESP32 en deep sleep para maximizar duración de batería.
 //  
 //  Parámetro mostrarDatosFinales:
@@ -603,7 +557,7 @@ void setup() {
     bootCount++;
     Serial.println("\n=============================");
     Serial.println(" Tracker LoRa-APRS TI0TEC7-7");
-    Serial.println("   v4.0 — AXP2101 / 80MHz");
+    Serial.println("      AXP2101 / 80MHz");
     Serial.println("=============================");
     Serial.printf("Boot #%d\n", bootCount);
 
@@ -638,13 +592,7 @@ void setup() {
     // ── 5. Transmitir por LoRa ───
     bool txExitoso = transmitirLoRa(tramaActual);
 
-    // ── 6. Escuchar iGates después de transmitir ───
-    if (txExitoso) {
-        ultimoIGate = escucharIGates();
-        Serial.println("[LoRa] Ultimo iGate: " + ultimoIGate);
-    }
-
-    // ── 7. Deep sleep ───
+    // ── 6. Deep sleep ───
     // Si TX fue exitoso, mostrar datos finales 5s antes de dormir
     entrarDeepSleep(txExitoso);
 }
