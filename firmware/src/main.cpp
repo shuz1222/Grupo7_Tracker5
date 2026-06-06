@@ -444,7 +444,7 @@ String construirTramaAPRS(DatosGPS datos) {
 
     // Construir trama completa
     String trama = String(CALLSIGN) +
-                   ">APRS,WIDE1-1:!" +              // Encabezado y tipo (! = posición)
+                   ">APLT00,WIDE1-1:!" +              // Encabezado y tipo (! = posición)
                    latStr + datos.hemisferio_lat +  // Latitud DDMM.hhN
                    String(APRS_SYMBOL_TAB) +        // Tabla de símbolos
                    lonStr + datos.hemisferio_lon +  // Longitud DDDMM.hhW
