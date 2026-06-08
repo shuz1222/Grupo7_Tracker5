@@ -26,7 +26,7 @@
 
 // Parámetros LoRa
 #define LORA_FREQ       433775000
-#define LORA_SF         10
+#define LORA_SF         12
 #define LORA_BW         125E3
 #define LORA_CR         5
 #define LORA_SYNC_WORD  0x12
@@ -469,7 +469,10 @@ bool transmitirLoRa(String trama) {
         actualizarPantalla();
 
         if (LoRa.beginPacket()) {
-            LoRa.print(trama);
+            LoRa.write('<');
+            LoRa.write(0xFF);
+            LoRa.write(0x01);
+            LoRa.write((const uint8_t *)trama.c_str(), trama.length());
             if (LoRa.endPacket()) {
                 txCount++;
                 estadoSistema = "TX OK #" + String(txCount);
