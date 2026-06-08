@@ -8,6 +8,8 @@ Esta sección documenta las pruebas realizadas para validar el correcto funciona
 | :--- | :--- | :--- |
 | **Firmware Richonguzman** | Prueba de referencia con el firmware de la comunidad CA2RXU para verificar funcionamiento del módulo tracker. | ![Prueba Richonguzman](./prueba_richonguzman.png) |
 | **Firmware propio v1** | Primera versión del firmware funcionando en el T-Beam. Se observa la obtención de fix GPS y la transmisión de la trama APRS en el puerto serial de Visual Studio Code. | ![Prueba Firmware Propio v1](./prueba_firmware_propio_v1.jpeg) |
+| **Firmware propio vFinal (Mapa APRS)** | Versión final del firmware funcionando en el T-Beam. Se observa la transmisión de las tramas APRS en el mapa aprs.fi. | ![Prueba Firmware Propio vFinal](./aprs.png) |
+| **Firmware propio vFinal (Información APRS)** | Versión final del firmware funcionando en el T-Beam. Se aprecia la información del tracker en la página aprs.fi. | ![Prueba Firmware Propio vFinal](./aprs2.png) |
 
 
 ### ▶️ Video demostrativo
