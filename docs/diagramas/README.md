@@ -44,7 +44,7 @@ Todo esto se realiza respetando el control de ciclo especificado, donde más ade
 
 # Máquina de estados del Firmware
 
-![maquina de estados](maquina_de_estados.svg)
+![Máquina de estados](maquina_de_estados.svg)
 
 ### Estados
 
