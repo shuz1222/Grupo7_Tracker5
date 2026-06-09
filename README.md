@@ -178,4 +178,6 @@ firmware/
 | Error de compilación con XPowersLib |	Actualizar la librería o verificar la versión de PlatformIO |
 | El tracker no transmite |	Verificar la frecuencia y Sync Word en platformio.ini |
 
+### Soporte para bicicletas
+
 
