@@ -54,6 +54,7 @@ Todo esto se realiza respetando el control de ciclo especificado, donde más ade
 | **ESPERAR_GPS_FIX** | Lectura continua de tramas NMEA a 1 Hz. Se mantiene en este estado mientras las tramas indican sin fix (campo `V`) y el tiempo no supera los 60 segundos. |
 | **CONSTRUCCION_TRAMA_APRS** | Convierte los datos GPS al formato APRS y arma el paquete completo con callsign `TI0TEC7-7`, símbolo y extensión de datos. |
 | **TRANSMITIR_LoRa** | Envía el paquete APRS por RF a 433.775 MHz mediante el chip SX1276. |
+| **MOSTRAR_COORDENADAS** | Presenta las coordenadas en la pantalla por 5 segundos antes de entrar a deep sleep. |
 | **DEEP_SLEEP** | El ESP32 apaga CPU, RAM y periféricos. Solo el RTC permanece activo contando 60 segundos. Al cumplirse, reinicia el sistema desde INIT. |
 
 ### Transiciones
@@ -67,8 +68,9 @@ Todo esto se realiza respetando el control de ciclo especificado, donde más ade
 | ESPERAR_GPS_FIX | ESPERAR_GPS_FIX | Trama NMEA sin fix (`V`) y tiempo < 60s |
 | ESPERAR_GPS_FIX | DEEP_SLEEP | Timeout 60s sin fix |
 | CONSTRUCCION_TRAMA_APRS | TRANSMITIR_LoRa | Trama APRS construida |
-| TRANSMITIR_LoRa | DEEP_SLEEP | TX exitoso |
-| TRANSMITIR_LoRa | CONSTRUCCION_TRAMA_APRS | TX fallido (reintento) |
+| TRANSMITIR_LoRa | MOSTRAR_COORDENADAS | TX exitoso |
+| TRANSMITIR_LoRa | TRANSMITIR_LoRa | TX fallido (reintento) |
+| MOSTRAR_COORDENADAS | DEEP_SLEEP | Timer de 5 segundos | 
 | DEEP_SLEEP | Punto de entrada | Wakeup por RTC (60 segundos) |
 
 ### Notas
