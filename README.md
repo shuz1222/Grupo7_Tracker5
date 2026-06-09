@@ -180,6 +180,6 @@ firmware/
 
 ## Soporte para bicicletas
 Diseño del sistema
-| ![Prueba Richonguzman](.https://github.com/shuz1222/Grupo7_Tracker5/tree/main/docs/fig) |
-| ![Prueba Richonguzman](./prueba_richonguzman.png) |
-| ![Prueba Richonguzman](./prueba_richonguzman.png) |
+| ![Isometrico](docs/fig/Integrador_1.PNG) |
+| ![Vista desde el frente](docs/fig/Integrador_2.PNG) |
+| ![Vista lateral](docs/fig/Integrador_3.PNG) |
