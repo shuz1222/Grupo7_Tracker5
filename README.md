@@ -181,5 +181,7 @@ firmware/
 ## Soporte para bicicletas
 Diseño del sistema
 | ![Isometrico](docs/fig/Integrador_1.PNG) |
+
 | ![Vista desde el frente](docs/fig/Integrador_2.PNG) |
+
 | ![Vista lateral](docs/fig/Integrador_3.PNG) |
