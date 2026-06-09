@@ -179,7 +179,8 @@ firmware/
 | El tracker no transmite |	Verificar la frecuencia y Sync Word en platformio.ini |
 
 ## Soporte para bicicletas
-Diseño del sistema
+Diseño de los soportes para colocar en la bicicleta
+
 | ![Isometrico](docs/fig/Integrador_1.PNG) |
 
 | ![Vista desde el frente](docs/fig/Integrador_2.PNG) |
