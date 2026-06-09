@@ -178,6 +178,8 @@ firmware/
 | Error de compilación con XPowersLib |	Actualizar la librería o verificar la versión de PlatformIO |
 | El tracker no transmite |	Verificar la frecuencia y Sync Word en platformio.ini |
 
-### Soporte para bicicletas
-
-
+## Soporte para bicicletas
+Diseño del sistema
+| ![Prueba Richonguzman](.https://github.com/shuz1222/Grupo7_Tracker5/tree/main/docs/fig) |
+| ![Prueba Richonguzman](./prueba_richonguzman.png) |
+| ![Prueba Richonguzman](./prueba_richonguzman.png) |
