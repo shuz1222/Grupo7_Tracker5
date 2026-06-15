@@ -21,7 +21,6 @@ Desarrollar el firmware de un dispositivo *tracker* que permita adquirir datos d
 - Implementar un parser para interpretar tramas NMEA.
 - Generar tramas de datos compatibles con el formato APRS.
 - Configurar y controlar la transmisión mediante un módulo LoRa.
-- Integrar los módulos de adquisición, procesamiento y transmisión en un sistema funcional.
 
 ---
 
@@ -65,10 +64,7 @@ Este proceso permite enviar la ubicación del dispositivo de forma continua util
     Código fuente del firmware del tracker
 
 /docs
-    Documentación técnica del proyecto
-
-/hardware
-    Diagramas o referencias del hardware utilizado
+    Documentación técnica del proyecto y diagramas
 
 /test
     Scripts o pruebas de funcionamiento
@@ -94,4 +90,99 @@ Actualmente el proyecto se encuentra en fase de desarrollo académico, donde se 
 - Proyectos educativos de comunicaciones inalámbricas
 - Sistemas de telemetría de bajo consumo energético
 
+## 📥 Instalación y compilación del firmware
 
+### Requisitos previos
+
+1. **PlatformIO** (no Arduino IDE)
+   - Descargar desde [platformio.org](https://platformio.org/)
+   - Opciones recomendadas:
+     - **VS Code**: Instalar la extensión "PlatformIO IDE"
+     - **CLI**: Usar `pip install platformio` en terminal
+
+2. **Hardware necesario**
+   - Placa T-Beam V1.2 (ESP32 + SX1276 + NEO-M8N + AXP2101)
+   - Cable USB-C (o Micro-USB según la versión de tu placa)
+   - Batería LiPo (opcional, para pruebas en campo)
+
+3. **Librerías** (se instalan automáticamente con PlatformIO)
+   - `TinyGPSPlus` - Para parsear las tramas NMEA del GPS
+   - `LoRa` - Para controlar el módulo SX1276
+   - `XPowersLib` - Para gestionar el chip de energía AXP2101
+   - `Adafruit GFX` y `SSD1306` - Para controlar la pantalla OLED
+
+### Pasos de instalación
+
+#### 1. Clonar el repositorio
+```bash
+git clone https://github.com/shuz1222/Grupo7_Tracker5.git
+cd Grupo7_Tracker5/firmware
+```
+#### 2. Abrir el proyecto en PlatformIO
+- En VS Code: Archivo → Abrir carpeta y seleccionar la carpeta firmware/
+
+- La extensión PlatformIO detectará automáticamente el archivo platformio.ini
+
+#### 3. Configurar el callsign (opcional)
+Editar el archivo src/main.cpp y modificar esta línea:
+```cpp
+#define CALLSIGN "TI0TEC7-7"   // Cambia por tu indicativo
+```
+#### 4. Compilar el firmware
+```bash
+pio run
+```
+O usar el botón ✓ (Compilar) en la barra inferior de PlatformIO.
+
+#### 5. Subir (flashear) el firmware al T-Beam
+```bash
+pio run --target upload
+```
+O usar el botón → (Subir) en la barra inferior de PlatformIO.
+
+#### 6. Monitorear la salida serie
+```bash
+pio device monitor --baud 115200
+```
+O usar el botón 🔌 (Serial Monitor) en PlatformIO.
+
+### Verificación de funcionamiento
+Al encender el T-Beam, deberías ver en el monitor serie algo similar a:
+```text
+=============================
+ Tracker LoRa-APRS TI0TEC7-7
+      AXP2101 / 80MHz
+=============================
+[AXP2101] OK — Bat: 4.13V  100%
+[OLED] OK — pantalla inicializada
+[GPS] Esperando fix...
+[LoRa] OK — 433.775 MHz SF12 BW125kHz CR4/5
+[GPS] Fix obtenido en 2.3 s — Sat: 8
+[LoRa] TX OK — transmision #1
+```
+
+### Estructura del firmware
+```text
+firmware/
+├── platformio.ini              # Configuración del proyecto
+├── src/
+│   └── main.cpp                # Código fuente completo
+└── Firmware.code-workspace     # Configuración de VS Code (opcional)
+```
+
+### Solución de problemas comunes
+| Problema |	Posible solución |
+|-----------|-----------|
+| LoRa ERROR — SX1276 no responde |	Verificar conexiones SPI o reiniciar la placa |
+| GPS no obtiene fix |	Llevar el tracker a exteriores con cielo despejado |
+| Error de compilación con XPowersLib |	Actualizar la librería o verificar la versión de PlatformIO |
+| El tracker no transmite |	Verificar la frecuencia y Sync Word en platformio.ini |
+
+## Soporte para bicicletas
+Diseño de los soportes para colocar en la bicicleta
+
+| ![Isometrico](docs/fig/Integrador_1.PNG) |
+
+| ![Vista desde el frente](docs/fig/Integrador_2.PNG) |
+
+| ![Vista lateral](docs/fig/Integrador_3.PNG) |

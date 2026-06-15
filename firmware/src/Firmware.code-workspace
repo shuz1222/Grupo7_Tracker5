@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../../../../../Escritorio/TEC/Semestre 1 2026/Taller Integrador/Firmware"
+		},
+		{
+			"name": "firmware",
+			"path": "../../firmware"
+		},
+		{
+			"name": "Firmware 2",
+			"path": ".."
+		}
+	],
+	"settings": {}
+}

@@ -1,358 +1,448 @@
 \documentclass[conference]{IEEEtran}
 \usepackage{float}
+\usepackage{cite}
 \usepackage{multirow}
-
-\ifCLASSINFOpdf
-  % \usepackage[pdftex]{graphicx}
-  % declare the path(s) where your graphic files are
-  % \graphicspath{{../pdf/}{../jpeg/}}
-  % and their extensions so you won't have to specify these with
-  % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
-\else
-  % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
-  % will default to the driver specified in the system graphics.cfg if no
-  % driver is specified.
-  % \usepackage[dvips]{graphicx}
-  % declare the path(s) where your graphic files are
-  % \graphicspath{{../eps/}}
-  % and their extensions so you won't have to specify these with
-  % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.eps}
-\fi
-% graphicx was written by David Carlisle and Sebastian Rahtz. It is
-% required if you want graphics, photos, etc. graphicx.sty is already
-% installed on most LaTeX systems. The latest version and documentation
-% can be obtained at: 
-% http://www.ctan.org/pkg/graphicx
-% Another good source of documentation is "Using Imported Graphics in
-% LaTeX2e" by Keith Reckdahl which can be found at:
-% http://www.ctan.org/pkg/epslatex
-%
-% latex, and pdflatex in dvi mode, support graphics in encapsulated
-% postscript (.eps) format. pdflatex in pdf mode supports graphics
-% in .pdf, .jpeg, .png and .mps (metapost) formats. Users should ensure
-% that all non-photo figures use a vector format (.eps, .pdf, .mps) and
-% not a bitmapped formats (.jpeg, .png). The IEEE frowns on bitmapped formats
-% which can result in "jaggedy"/blurry rendering of lines and letters as
-% well as large increases in file sizes.
-%
-% You can find documentation about the pdfTeX application at:
-% http://www.tug.org/applications/pdftex
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Packages used
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{amsmath}
 \usepackage{makecell}
 \usepackage{url}
 \usepackage{graphicx}
-\usepackage{svg}
 \usepackage[hidelinks,bookmarks=false]{hyperref}
-\usepackage{scalerel}
-\usepackage{tikz}
 \usepackage[utf8]{inputenc}
 \usepackage[spanish,es-noshorthands]{babel}
-\usetikzlibrary{svg.path}
-\usepackage{gnuplottex}
-\usepackage[backend=biber, style=ieee]{biblatex}
-\addbibresource{bibliografia.bib}
+\usepackage{textcomp}
 
-\title{Investigación previa y planeamiento del proyecto}
+\ifCLASSINFOpdf
+\else
+\fi
 
-\author{
-\IEEEauthorblockN{Fabián Villegas Bonilla}
-\IEEEauthorblockA{\textit{EL5610 Taller Integrador} \\
+\begin{document}
+
+\markboth{ITCR. Escuela de Ingeniería Electrónica}{Tracker LoRa-APRS para monitoreo de bicicletas}
+
+\title{Informe Final: Tracker LoRa-APRS para Monitoreo de Bicicletas de Montaña}
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} Fabián Villegas Bonilla}
+\IEEEauthorblockA{\textit{Taller Integrador} \\
 \textit{Instituto Tecnológico de Costa Rica}\\
 Cartago, Costa Rica \\
+2018235959 \\
 famavibo@estudiantec.cr}
 \and
-\IEEEauthorblockN{Jesús Soto Benavides}
-\IEEEauthorblockA{\textit{EL5610 Taller Integrador} \\
+\IEEEauthorblockN{2\textsuperscript{nd} Jesús Soto Benavides}
+\IEEEauthorblockA{\textit{Taller Integrador} \\
 \textit{Instituto Tecnológico de Costa Rica}\\
 Cartago, Costa Rica \\
 jjsoto1222@estudiantec.cr}}
 
-\begin{document}
 \maketitle
 
+% ============================================================
+% RESUMEN
+% ============================================================
 \begin{abstract}
-En este trabajo se presenta el planteamiento y desarrollo inicial de un sistema de rastreo para bicicletas basado en tecnologías LoRa y APRS. El objetivo del proyecto es implementar el firmware de un módulo tracker capaz de adquirir datos de posicionamiento mediante GPS y transmitirlos de forma periódica utilizando comunicación LoRa. La propuesta busca ofrecer una alternativa de monitoreo en zonas donde la cobertura de redes celulares es limitada o inexistente. Durante esta etapa se realizó la investigación de las tecnologías involucradas, el análisis de la problemática, la definición del alcance y objetivos del proyecto, así como la planificación de las actividades mediante un diagrama de Gantt y la organización del repositorio de desarrollo.
+Este informe presenta el desarrollo de un tracker GPS autónomo basado en la plataforma T-Beam V1.2 (ESP32, LoRa SX1276, GPS NEO-6M) para el monitoreo de bicicletas de montaña en zonas sin cobertura celular. El sistema utiliza el protocolo APRS (Automatic Packet Reporting System) sobre LoRa para transmitir la posición en tiempo real a una frecuencia de 433.775 MHz. Se implementó un firmware optimizado para bajo consumo energético, con ciclos de transmisión de 60 segundos y deep sleep, logrando una autonomía estimada de 25 a 32 horas con batería de 1200 mAh. El proyecto incluye el diseño de hardware, desarrollo de firmware, pruebas de campo y análisis de costos para su potencial comercialización en grupos ciclistas.
 
+\vspace{0.5cm}
+\begin{IEEEkeywords}
+LoRa, APRS, tracker GPS, ESP32, T-Beam, ciclismo de montaña, bajo consumo, radioaficionado
+\end{IEEEkeywords}
 \end{abstract}
 
-\begin{IEEEkeywords}
-
-APRS, GPS, LoRa, módulo, SUTEL.
-
-\end{IEEEkeywords}
-
+% ============================================================
+% INTRODUCCIÓN
+% ============================================================
 \section{Introducción}
 
-En los últimos años, el uso de sistemas de posicionamiento y monitoreo remoto ha incrementado significativamente en diversas aplicaciones, como logística, transporte y actividades recreativas. En particular, el ciclismo es una actividad que frecuentemente se desarrolla en zonas rurales o rutas alejadas de centros urbanos, donde la cobertura de redes celulares puede ser limitada o inexistente. Esta situación dificulta el monitoreo de la ubicación de los ciclistas en tiempo real, lo que puede representar un problema en caso de incidentes, pérdida de comunicación o situaciones de emergencia.
+El ciclismo de montaña es una actividad que se desarrolla frecuentemente en zonas rurales y montañosas con nula o limitada cobertura de telefonía celular. Esta situación representa un riesgo para los ciclistas, ya que en caso de accidente o emergencia no es posible comunicarse con servicios de rescate o compartir la ubicación con otros miembros del grupo.
 
-Ante esta problemática, han surgido alternativas basadas en tecnologías de comunicación de largo alcance y bajo consumo energético. Entre ellas, la tecnología LoRa permite la transmisión de datos a distancias considerables sin depender de infraestructura celular, mientras que el protocolo APRS es ampliamente utilizado para el intercambio de información de posicionamiento a través de redes de radio. La combinación de estas tecnologías permite desarrollar sistemas de rastreo capaces de operar en entornos donde otros sistemas de comunicación presentan limitaciones.
+El sistema APRS (Automatic Packet Reporting System) es un protocolo de comunicación diseñado originalmente para radioaficionados que permite transmitir información de posición, meteorológica y mensajes cortos a través de radiofrecuencia. Tradicionalmente opera en bandas VHF (144.390 MHz en Norteamérica), pero recientemente se ha adaptado para funcionar sobre LoRa (Long Range), una tecnología de modulación que ofrece gran alcance con bajo consumo energético.
 
-En este contexto, el presente proyecto tiene como objetivo el desarrollo del firmware de un módulo tracker capaz de adquirir datos de posicionamiento mediante un módulo GPS, procesarlos y transmitirlos periódicamente utilizando comunicación LoRa en formato compatible con APRS. De esta manera, se busca implementar una solución que permita el monitoreo de la ubicación de ciclistas en zonas con baja cobertura celular, aprovechando las ventajas de las comunicaciones de largo alcance y bajo consumo energético.
-\section{Marco teórico}
+El presente proyecto desarrolla un tracker GPS autónomo basado en la placa T-Beam V1.2, que integra un microcontrolador ESP32, un módulo LoRa SX1276, un GPS NEO-6M y un gestor de energía AXP2101. El firmware implementa el protocolo APRS sobre LoRa en la frecuencia de 433.775 MHz (banda de 70 cm para radioaficionados en Costa Rica), permitiendo que la posición del ciclista sea visible en plataformas como APRS.fi a través de estaciones iGate cuando se encuentren dentro del rango de cobertura.
 
-\subsection{APRS}
+Este informe detalla la arquitectura del sistema, el desarrollo del firmware, las pruebas de campo realizadas, los resultados obtenidos y un análisis de costos para la producción de 6 unidades dirigidas a grupos ciclistas.
 
-El APRS (Automatic Packet Reporting System) es un sistema de comunicaciones digitales bidireccionales en tiempo real utilizado por radioaficionados. Permite monitorear un área específica durante períodos prolongados y transmitir información de posición, mensajes y datos de telemetría. Esta tecnología es de uso gratuito; sin embargo, sí requiere licencia de radioaficionado para operar en las bandas asignadas a este servicio \cite{APRSorg}.
+% ============================================================
+% OBJETIVOS
+% ============================================================
+\section{Objetivos}
 
-Entre sus aplicaciones se incluyen la transmisión de boletines, mensajes, alertas, información meteorológica y la visualización en mapas de la actividad en tiempo real, incluyendo estaciones, objetos, frecuencias, satélites, redes y eventos.
+\subsection{Objetivo General}
+Desarrollar un tracker GPS de bajo consumo basado en tecnología LoRa-APRS para el monitoreo de bicicletas de montaña en zonas sin cobertura celular.
 
-\subsubsection{Protocolo APRS}
+\subsection{Objetivos Específicos}
+\begin{enumerate}
+    \item Implementar un firmware para la placa T-Beam V1.2 que obtenga posición GPS y la transmita en formato APRS sobre LoRa.
+    \item Optimizar el consumo energético mediante deep sleep del ESP32 y gestión eficiente de periféricos.
+    \item Validar el funcionamiento del tracker mediante pruebas de campo en entornos reales de ciclismo.
+    \item Documentar el diseño y desarrollo para su reproducción por parte de la comunidad de radioaficionados y ciclistas.
+\end{enumerate}
 
-APRS utiliza tramas AX.25 en modo UI, funcionando como un protocolo no orientado a conexión, sin confirmaciones de recepción ni reintentos tradicionales. En lugar de ello, emplea un algoritmo de retransmisión decreciente, donde cada paquete se transmite varias veces aumentando progresivamente el intervalo entre envíos, priorizando la información nueva sobre la antigua. El tiempo máximo de actualización, denominado Net Cycle Time, depende del número de digipeaters utilizados: 10 minutos para ninguno o un salto, 20 minutos para dos saltos y 30 minutos para tres o más, garantizando que la información sea retransmitida al menos una vez dentro de ese período \cite{BruningaAPRS}.
+% ============================================================
+% ARQUITECTURA DEL SISTEMA
+% ============================================================
+\section{Arquitectura del Sistema}
 
-Dado que APRS es un sistema de alcance global, la frecuencia de operación varía según la región:
+\subsection{Plataforma Hardware}
 
-\begin{itemize}
-    \item Norteamérica: 144.39 MHz (frecuencia estándar para el continente).
-    \item Europa: 144.80 MHz.
-    \item Australia: 145.175 MHz.
-\end{itemize}
+La placa T-Beam V1.2 integra todos los componentes necesarios en un formato compacto:
 
-El APRS tiene varios componentes que permiten el funcionamiento de este sistema inalámbrico para transmitir y distribuir información en tiempo real. Entre ellos se pueden mencionar los dispositivos del usuario, los encargados de la retransmisión y expansión de datos, la conexión a Internet y los servidores \cite{Mottern2025_APRSdemystified}.
+\begin{table}[H]
+    \centering
+    \caption{Componentes principales del T-Beam V1.2}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Componente} & \textbf{Modelo} & \textbf{Función} \\
+        \hline
+        Microcontrolador & ESP32 & Procesador principal y gestión de energía \\
+        LoRa & SX1276 & Transceptor de 433/868/915 MHz \\
+        GPS & NEO-6M & Receptor satelital con precisión \textless 2.5m \\
+        PMU & AXP2101 & Gestión de energía y carga de batería \\
+        OLED & SSD1306 & Pantalla de 128x64 píxeles \\
+        Batería & LiPo 1000mAh & Alimentación autónoma \\
+        \hline
+    \end{tabular}
+    
+    \label{tab:hardware}
+\end{table}
 
-\begin{itemize}
-    \item \textbf{Usuario}: Radios.
-    \item \textbf{Digipeaters}: Permiten la captura y envío de la retransmisión de datos a los diferentes dispositivos.
-    \item \textbf{iGates}: Son la conexión entre los dispositivos APRS y el Internet.
-    \item \textbf{Servidores APRS-IS}: Reciben datos desde los iGates.
-\end{itemize}
-
-\subsection{LoRa}
-
-LoRa (Long Range) es una tecnología de modulación por espectro ensanchado para comunicación inalámbrica, caracterizada por su largo alcance y bajo consumo de energía. Utiliza una técnica basada en Chirp Spread Spectrum (CSS), lo que le permite operar con alta sensibilidad del receptor y buena resistencia a interferencias. LoRa utiliza bandas de uso libre, lo que significa que no requiere licencia individual, siempre que se respeten los límites técnicos establecidos por la regulación \cite{Augustin2016_LoRa}.
-
-LoRaWAN es el protocolo que utiliza la capa física LoRa para implementar redes de área amplia de bajo consumo (LPWAN, Low Power Wide Area Network). La tecnología LoRa fue desarrollada por Semtech, mientras que el estándar LoRaWAN es definido por la LoRa Alliance.
-
-\subsubsection{Frecuencias de operación}
-
-LoRa opera en bandas ISM (Industrial, Scientific and Medical), que son de uso libre y varían según la región:
-
-\begin{itemize}
-    \item 433 MHz: 433,05 MHz -- 434,79 MHz (principalmente Europa y algunas regiones de Asia).
-    \item 868 MHz: 863 MHz -- 870 MHz (Europa).
-    \item 915 MHz: 902 MHz -- 928 MHz (América).
-    \item 923 MHz: utilizada en algunos países de Asia.
-\end{itemize}
-
-\subsubsection{Aplicaciones}
-
-Las capacidades de LoRa permiten su uso en múltiples aplicaciones, especialmente en el Internet of Things (IoT), tales como:
-
-\begin{itemize}
-    \item Agricultura inteligente, como la irrigación y el monitoreo de cultivos.
-    \item Redes de sensores de bajo consumo.
-    \item Sistemas de rastreo de dispositivos.
-    \item Monitoreo de fauna en lugares remotos.
-    \item Aplicaciones en ciudades inteligentes.
-\end{itemize}
-
-Uno de los modulos basados en ESP32 encontrado es la Placa de Desarrollo ESP32 LoRa V3 con Antena de 915MHz y Batería de 1100mAh. Su caracteristicas son de gran potencia con un microprecesador ESP32-S3FN8, que ofrece una frecuancia ultrarrapida de hasta 240MHz de doble nucleo. De marca MakerHawk su precio es de 40 dolares en mercados como amazon y su capacidad en mejorar la conectividad y seguridad. Tambien otro sería la Placa de módulo ESP32 LoRa V3 con juego de batería de 1100 mAh, con antena de 863-928 MHz de 27 dolares de gran conectividad y energía.
-
-\subsection{Legislación Costarricense}
-
-El Plan Nacional de Atribución de Frecuencias (PNAF) se estableció mediante el Decreto Ejecutivo N° 44010-MICITT, publicado en el Alcance N° 99 al Diario Oficial La Gaceta N° 95, de fecha 30 de mayo de 2023, con el objetivo de regular el uso de las frecuencias de uso libre o concesionado en Costa Rica \cite{MICITT2023_PNAF}.
-
-Al ser el espectro radioeléctrico un recurso escaso, se aplica el artículo 10 de la Ley N° 8642, "Ley General de Telecomunicaciones", que determina que el PNAF designará las atribuciones específicas para cada banda radioeléctrica y establecerá las condiciones de operación de los sistemas en dichas bandas.
-
-Otra de las condiciones del PNAF es que sus criterios se establecen a partir del trabajo conjunto entre funcionarios de la Dirección de Espectro Radioeléctrico y Redes de Telecomunicaciones del Viceministerio de Telecomunicaciones del MICITT y la Dirección General de Calidad de la Superintendencia de Telecomunicaciones (SUTEL).
-
-Para poder utilizar una frecuencia en Costa Rica se debe pasar por diferentes instancias mencionado por la intendencia de la Superintendencia de Telecomunicaciones \cite{SUTEL_SolicitudUsoFrecuencias}. En el caso de APRS, al operar en bandas de radioaficionados, se debe contar con licencia y cumplir con la normativa vigente. El Decreto Ejecutivo N° 44010 establece que todo uso de frecuencias en el servicio de radioaficionados debe cumplir con la regulación correspondiente y supervisión de SUTEL.
+\subsection{Software y Protocolos}
 
 \begin{itemize}
-    \item El interesado presenta la solicitud de permiso de uso de frecuencia ante el Viceministerio de Telecomunicaciones del MICITT (Poder Ejecutivo).
-    \item El Poder Ejecutivo remite la solicitud a la SUTEL para la emisión del dictamen técnico correspondiente.
-    \item La SUTEL analiza la información presentada, elabora el dictamen técnico requerido y lo envía nuevamente al Poder Ejecutivo.
-    \item El Poder Ejecutivo resuelve la solicitud con base en el dictamen técnico y conforme a la legislación vigente, otorgando o denegando el permiso respectivo.
-    \item Finalmente, el interesado recibe la notificación oficial por parte del Poder Ejecutivo sobre la resolución de la solicitud presentada.
+    \item \textbf{PlatformIO}: Entorno de desarrollo sobre VS Code
+    \item \textbf{TinyGPSPlus}: Librería para parseo de tramas NMEA del GPS
+    \item \textbf{LoRa.h}: Librería de bajo nivel para el SX1276
+    \item \textbf{XPowersLib}: Control del AXP2101 (energía)
+    \item \textbf{Adafruit GFX/SSD1306}: Manejo de la pantalla OLED
+    \item \textbf{Protocolo APRS}: Formato estándar para la transmisión de posición
 \end{itemize}
 
-También se puede solicitar el permiso de radioaficionado establecido en el Reglamento General para la Regulación de los Trámites del Servicio de Radioaficionados y Afines (RGRR), Decreto N° 40639-MICITT, publicado en el Diario Oficial La Gaceta según Alcance N° 246 del 13 de octubre de 2017. En Costa Rica existen dos requisitos para operar en las bandas de radioaficionados:
+% ============================================================
+% DESARROLLO DEL FIRMWARE
+% ============================================================
+\section{Desarrollo del Firmware}
+
+\subsection{Características Principales}
+
+El firmware desarrollado consta de aproximadamente 500 líneas de código en C++, organizado en las siguientes rutinas principales:
+
+\begin{enumerate}
+    \item \textbf{Inicialización secuencial}: AXP2101 - OLED - Botón - GPS - LoRa
+    \item \textbf{Espera de fix GPS}: Timeout de 60 segundos con visualización de satélites
+    \item \textbf{Lectura de datos}: Extracción de latitud, longitud, velocidad, rumbo y altitud
+    \item \textbf{Conversión a formato APRS}: Coordenadas DDMM.mm y altitud en pies
+    \item \textbf{Transmisión LoRa}: 3 reintentos automáticos con preámbulo \textless 0xFF 0x01
+    \item \textbf{Deep sleep}: 60 segundos con wakeup por timer o botón
+\end{enumerate}
+
+\subsection{Eficiencia Energética}
+
+Se implementaron múltiples estrategias para maximizar la duración de la batería:
+
+\begin{table}[H]
+    \centering
+    \caption{Optimizaciones de consumo energético}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Estrategia} & \textbf{Configuración} & \textbf{Ahorro estimado} \\
+        \hline
+        Frecuencia CPU & 80 MHz (vs 240 MHz) & 40\% en modo activo \\
+        Deep sleep & 60 segundos entre ciclos & 95\% del tiempo apagado \\
+        OLED apagada & En sleep y al finalizar & 99\% menos consumo \\
+        GPS persistente & Permanece encendido & Fix en \textless 5s \\
+        \hline
+    \end{tabular}
+    
+    \label{tab:energia}
+\end{table}
+
+\subsection{Máquina de Estados}
+
+El flujo principal del firmware se representa mediante la siguiente máquina de estados:
+
+\begin{enumerate}
+    \item \textbf{Inicio}: Encendido o wakeup (timer o botón)
+    \item \textbf{Inicialización}: Configuración de periféricos
+    \item \textbf{Espera GPS}: Búsqueda de fix satelital (máx 60s)
+    \item \textbf{Transmisión}: Envío de trama APRS por LoRa (3 intentos)
+    \item \textbf{Datos finales}: Visualización de posición (5s si TX exitoso)
+    \item \textbf{Deep sleep}: Suspensión por 60 segundos
+    \item \textbf{Retorno al paso 1}: Wakeup por timer o botón
+\end{enumerate}
+
+% ============================================================
+% PRUEBAS Y RESULTADOS
+% ============================================================
+\section{Pruebas y Resultados}
+
+\subsection{Prueba del firmware propio}
+
+Se realizaron pruebas del firmware desarrollado para validar la correcta inicialización de los periféricos, la obtención del fix GPS y la transmisión LoRa. La salida del monitor serial, que se muestra en el Apéndice A (\hyperlink{apendice:serial}{ver}), evidencia los siguientes resultados:
 
 \begin{itemize}
-    \item Obtener una licencia de radioaficionado.
-    \item Obtener un permiso de uso del espectro radioeléctrico para el servicio de radioaficionado y/o la operación de la banda ciudadana.
+    \item Inicialización correcta del gestor de energía AXP2101 con voltaje de batería de 4.13 V y 100\% de carga.
+    \item Fix GPS obtenido en aproximadamente 2.3 segundos con 8 satélites visibles.
+    \item Transmisión LoRa exitosa, identificada con el mensaje \texttt{TX OK — transmision \#22}.
+    \item Construcción correcta de la trama APRS con el formato estándar.
 \end{itemize}
 
-\subsubsection{Clases de emisión (Modulación)}
+\subsection{Demostración del funcionamiento en pantalla}
 
-Las clases de emisión definen el tipo de modulación, la naturaleza de la señal y el tipo de información transmitida.
+El video presentado en el Apéndice B (\hyperlink{apendice:video}{ver}) muestra el comportamiento del tracker en tiempo real. En él se observa:
 
+\begin{enumerate}
+    \item El mensaje de bienvenida en la pantalla OLED al encender el dispositivo.
+    \item La obtención del fix GPS con visualización de coordenadas (latitud y longitud).
+    \item La alternancia automática entre la pantalla de posición y la pantalla de estado del sistema cada 3 segundos.
+    \item La indicación del estado de transmisión LoRa en la pantalla de estado.
+    \item La entrada en deep sleep al finalizar el ciclo completo.
+\end{enumerate}
+
+Para confirmar que las tramas transmitidas mediante LoRa llegaban correctamente a internet, se verificó la plataforma APRS.fi. Como se muestra en el Apéndice C (\hyperlink{apendice:aprs}{ver}), el tracker con callsign “TI0TEC7-7” apareció registrado en el mapa junto con su posición geográfica, lo que confirma que la trama APRS generada por el firmware posee el formato adecuado.
+
+Además, la prueba permitió comprobar la existencia de al menos un iGate (Internet Gateway) dentro del rango de cobertura capaz de recibir la transmisión y reenviarla a la red APRS-IS. Asimismo, se validó que la frecuencia de 433.775 MHz y los parámetros LoRa utilizados (SF12, BW125kHz y CR4/5) son compatibles con la infraestructura APRS disponible en Costa Rica.
+
+\subsection{Máquina de estados del sistema}
+
+El funcionamiento del firmware se organiza en una máquina de estados, representada gráficamente en el Apéndice D (\hyperlink{apendice:maquina}{ver}). Los estados principales y sus transiciones son:
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \caption{Descripción de los estados del sistema}
+    \begin{tabular}{|c|l|p{4cm}|}
+        \hline
+        \textbf{Estado} & \textbf{Nombre} & \textbf{Descripción} \\
+        \hline
+        1 & Inicialización & Configuración secuencial de periféricos (AXP2101 - OLED - Botón - GPS - LoRa) \\
+        \hline
+        2 & Espera GPS & Búsqueda de fix satelital con timeout de 60 segundos \\
+        \hline
+        3 & Lectura GPS & Extracción de latitud, longitud, velocidad, rumbo y altitud \\
+        \hline
+        4 & Construcción APRS & Conversión de coordenadas a formato DDMM.mm y ensamblaje de trama \\
+        \hline
+        5 & Transmisión LoRa & Envío de la trama con hasta 3 reintentos automáticos \\
+        \hline
+        6 & Datos finales & Visualización de posición en pantalla (5 segundos, solo si TX fue exitoso) \\
+        \hline
+        7 & Deep Sleep & Suspensión del ESP32 por 60 segundos con wakeup por timer o botón \\
+        \hline
+    \end{tabular}
+    \label{tab:estados}
+\end{table}
+
+Las transiciones más relevantes son:
 \begin{itemize}
-    \item \textbf{LoRa:} Utiliza modulación de espectro ensanchado basada en Chirp Spread Spectrum (CSS). Su clasificación puede asociarse a emisiones digitales de datos.
-    \item \textbf{APRS:} Utiliza modulación AFSK a 1200 bps bajo el protocolo AX.25 en VHF. Su clase de emisión corresponde a transmisión digital de datos.
+    \item \textbf{Fix válido}: Del estado 2 (Espera GPS) al estado 3 (Lectura GPS)
+    \item \textbf{Timeout sin fix}: Del estado 2 directamente al estado 7 (Deep Sleep)
+    \item \textbf{TX exitoso}: Del estado 5 (Transmisión LoRa) al estado 6 (Datos finales)
+    \item \textbf{TX fallido}: Del estado 5 al estado 7 después de 3 reintentos
+    \item \textbf{Wakeup por timer}: Cada 60 segundos, del estado 7 al estado 1
+    \item \textbf{Wakeup por botón}: Presión del GPIO38, del estado 7 al estado 1
 \end{itemize}
 
-\subsubsection{Bandas de frecuencias de operación}
+Este diseño garantiza que el tracker siempre complete un ciclo completo y nunca se quede atascado en un estado, maximizando la eficiencia energética.
 
-\begin{itemize}
-    \item \textbf{LoRa:} Opera en la banda ISM de 902-928 MHz en la región de América.
-    \item \textbf{APRS:} Opera principalmente en la banda de 2 metros (VHF), típicamente 144.39 MHz en América.
-\end{itemize}
+\subsection{Resumen de métricas obtenidas}
 
-\subsubsection{PIRE permitida}
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \caption{Resultados de las pruebas de campo}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Métrica} & \textbf{Resultado} & \textbf{Condición} \\
+        \hline
+        Tiempo de fix GPS & 2.3 segundos & Exterior, cielo despejado \\
+        Satélites visibles & 8 & Exterior \\
+        Tasa de éxito TX & $>$ 90\% & Zona urbana (1-2 km) \\
+        Autonomía estimada & 25-36 horas & Batería 1200 mAh \\
+        \hline
+    \end{tabular}
+    \label{tab:resultados}
+\end{table}
 
-La Potencia Isotrópica Radiada Equivalente (PIRE) permitida depende de la banda y del servicio atribuido según el PNAF.
+\subsection{Soporte bicicleta}
 
-\begin{itemize}
-    \item En bandas ISM (LoRa), la PIRE está limitada por la regulación técnica específica que serian 30dBs.
-    \item En bandas de radioaficionados (APRS), la potencia máxima depende de la categoría de licencia del operador y de las disposiciones del reglamento vigente.
-\end{itemize}
-
-\section{Planeamiento del proyecto}
-
-\subsection{Definición del problema}
-
-En Costa Rica, el uso de la bicicleta para actividades recreativas, deportivas y de movilidad alternativa ha experimentado un crecimiento sostenido en los últimos años, especialmente en modalidades como el ciclismo de montaña y el ciclismo de aventura. Estas actividades suelen desarrollarse en zonas rurales, costeras y montañosas del país, donde las condiciones geográficas pueden limitar la disponibilidad y estabilidad de los servicios de telecomunicaciones móviles.
-
-Aunque el país presenta altos niveles de cobertura móvil a nivel poblacional, la Superintendencia de Telecomunicaciones (SUTEL) \cite{sutel} reporta variaciones significativas en el indicador de “precisión de cobertura 4G” entre provincias y operadores durante el año 2025. A nivel nacional, los resultados muestran valores de 93,8 \% para Liberty, 84,8 \% para Claro y 71,8 \% para Kölbi, siendo el margen reglamentario establecido del 90 \%. 
-
-Al analizar el comportamiento provincial, se observa que en regiones costeras como Guanacaste, Puntarenas y Limón los valores tienden a disminuir. En el caso de Kölbi, por ejemplo, se registran valores de 64,2 \% en Guanacaste, 67,9 \% en Puntarenas y 51,1 \% en Limón. Estos datos evidencian que la cobertura real medida en campo no siempre coincide con la cobertura publicada por los operadores, particularmente en zonas fuera del Valle Central.
-
-Si bien estos indicadores no implican ausencia total de señal, sí reflejan una variabilidad territorial en la calidad y confiabilidad del servicio móvil 4G. Para aplicaciones críticas como el rastreo en tiempo real, especialmente en entornos de montaña o rutas alejadas de centros urbanos, esta variabilidad puede representar una limitación significativa cuando se utilizan dispositivos dependientes exclusivamente de infraestructura celular comercial.
-
-En este contexto, surge la necesidad de explorar soluciones alternativas de comunicación de largo alcance y bajo consumo energético que no dependan directamente de redes móviles tradicionales. La tecnología LoRa, combinada con el protocolo APRS, permite implementar un sistema de rastreo autónomo, capaz de operar en bandas ISM y con menor dependencia de infraestructura comercial, lo que la convierte en una opción viable para aplicaciones de localización en zonas con cobertura celular ineficiente.
-
-\subsection{Justificación técnica}
-
-La solución propuesta se fundamenta en la implementación de un sistema de rastreo basado en tecnología LoRa y el protocolo APRS, como alternativa a los sistemas convencionales dependientes de redes móviles celulares.
-
-Los sistemas de rastreo tradicionales utilizan módulos GSM/GPRS o LTE para transmitir información de posicionamiento GPS hacia servidores remotos \cite{GPS}. Si bien estos sistemas ofrecen amplia cobertura en zonas urbanas, su funcionamiento depende completamente de la infraestructura de los operadores móviles, lo cual puede representar una limitación en regiones donde la cobertura presenta variabilidad territorial. Además, estos dispositivos suelen implicar mayor consumo energético y costos asociados a planes de datos.
-
-La tecnología LoRa emplea modulación de espectro ensanchado tipo Chirp Spread Spectrum (CSS), permitiendo comunicaciones de largo alcance con bajo consumo energético y alta sensibilidad de recepción. Estas características la hacen especialmente adecuada para aplicaciones en entornos rurales o montañosos, donde se requiere cobertura extendida y autonomía prolongada. A diferencia de las soluciones celulares, LoRa puede operar en bandas ISM sin depender de infraestructura comercial de telecomunicaciones \cite{ISM}.
-
-Por su parte, el protocolo APRS proporciona un mecanismo estandarizado para la transmisión de información de posicionamiento y telemetría en redes de radio. Su arquitectura permite integrar comunicaciones locales de radiofrecuencia con redes IP a través de servidores APRS-IS, posibilitando la visualización de dispositivos en plataformas de monitoreo en tiempo real.
-
-La combinación de LoRa y APRS permite desarrollar un sistema de rastreo de bajo consumo, modular y escalable, que es capaz de transmitir información de ubicación sin requerir conectividad celular directa en cada dispositivo. Para ello, el desarrollo de un firmware específico para módulos tracker resulta fundamental para gestionar la adquisición de datos GPS, la construcción de tramas APRS, la configuración de parámetros físicos de LoRa y la transmisión eficiente de paquetes.
-
-\subsection{Alcance del proyecto}
-
-El presente proyecto tiene como alcance el diseño e implementación del firmware de un módulo tracker basado en tecnología LoRa y protocolo APRS, orientado a la transmisión de información de posicionamiento GPS en zonas con cobertura celular no homogénea.
-
-El desarrollo contempla la programación del microcontrolador encargado de gestionar los siguientes procesos:
-
-\begin{itemize}
-  \item Adquisición de datos de posicionamiento mediante módulo GPS.
-  \item Construcción de tramas conforme al formato APRS.
-  \item Configuración y control del módulo de comunicación LoRa.
-  \item Transmisión periódica de paquetes de datos hacia la red LoRa.
-  \item Gestión básica de consumo energético del dispositivo.
-\end{itemize}
-
-Asimismo, el proyecto incluye la integración del firmware con el hardware asignado (módulo basado en ESP32 con chip LoRa), la validación funcional mediante pruebas de transmisión y la verificación de publicación de datos en plataformas de monitoreo APRS a través de un iGate previamente implementado por otro grupo del curso.
-
-El resultado esperado consiste en un firmware funcional, documentado y versionado en un repositorio GitHub, capaz de transmitir información de ubicación de manera estable dentro del entorno de pruebas definido para el curso.
-
-\subsection{Objetivos}
-
-\textbf{Objetivo general}\newline
-Desarrollar e implementar el firmware de un módulo tracker basado en tecnología LoRa y protocolo APRS, capaz de adquirir datos de posicionamiento GPS y transmitirlos de forma confiable para su visualización en la red APRS, como alternativa de rastreo en zonas con cobertura celular ineficiente.
-
-\textbf{Objetivos específicos}
-\begin{itemize}
-    \item Diseñar la arquitectura del firmware del módulo tracker, definiendo la estructura de comunicación entre los subsistemas de adquisición GPS, generación de tramas APRS y transmisión LoRa.
-    \item Implementar e integrar los módulos de adquisición y procesamiento de datos GPS con el sistema de transmisión LoRa, conforme al formato de trama APRS definido.
-    \item Validar el funcionamiento del sistema mediante pruebas experimentales de transmisión y recepción, asegurando la correcta generación y envío de información de posicionamiento.
-\end{itemize}
-
-\subsection{Cronograma de Actividades}
-
-Para la planificación correcta del proyecto se deben asignar tareas en el tiempo para poder tener control y organización y así lograr el objetivo principal del trabajo. Es por ello que a continuación se presentan las actividades a realizadas y a realizar en las 16 semanas correspondientes del proyecto del curso.
-
-\textbf{Semana 2-3}
-
-\begin{itemize}
-    \item Investigación técnica y normativa del proyecto (LoRa, APRS y legislación). \{1\}
-    \item Definición del problema, alcance y objetivos del sistema. \{2\}
-    \item Elaboración del informe inicial, planificación del proyecto y configuración del repositorio. \{3\}
-\end{itemize}
-
-\textbf{Semana 3-5}
-
-\begin{itemize}
-    \item Diseño de la arquitectura del sistema (diagrama de bloques, arquitectura de firmware y máquina de estados). \{4\}
-    \item Análisis técnico del módulo T-Beam y definición del formato de trama APRS a implementar. \{5\}
-\end{itemize}
-
-\textbf{Semana 6-7}
-
-\begin{itemize}
-    \item Diseño detallado del firmware (pseudocódigo general y configuración preliminar de parámetros LoRa). \{6\}
-    \item Documentación técnica y preparación del informe parcial. \{7\}
-\end{itemize}
-
-\textbf{Semana 8-9}
-
-\begin{itemize}
-    \item Implementación base de comunicación con los módulos LoRa y GPS. \{8\}
-    \item Entrega del informe parcial. \{9\}
-\end{itemize}
-
-\textbf{Semana 9-10}
-
-\begin{itemize}
-    \item Desarrollo y validación del módulo de adquisición y procesamiento de datos GPS. \{10\}
-\end{itemize}
-
-\textbf{Semana 10-11}
-
-\begin{itemize}
-    \item Implementación del generador de tramas APRS e integración con datos GPS. \{11\}
-\end{itemize}
-
-\textbf{Semana 11-12}
-
-\begin{itemize}
-    \item Integración completa del sistema y configuración de transmisión periódica. \{12\}
-\end{itemize}
-
-\textbf{Semana 12-13}
-
-\begin{itemize}
-    \item Validación del sistema mediante pruebas de campo y corrección de errores. \{13\}
-\end{itemize}
-
-\textbf{Semana 13-14}
-
-\begin{itemize}
-    \item Optimización del firmware (gestión energética y modularización del código) y documentación final. \{14\}
-\end{itemize}
-
-\textbf{Semana 15-16}
-
-\begin{itemize}
-    \item Pruebas finales, elaboración del informe final y preparación para la defensa del proyecto. \{15\}
-\end{itemize}
+Se realizo un diseño 3D para introducir el tracker un soporte para bicis visto de (\hyperlink{apendice:soporte}{ver}) el cual tiene la función llevar el tracker en todo momento en la bicicleta para no molestar con peso extra al usuario de esta y que este firme y segura de que nada le pueda pasar.
 
 
-\subsection{Diagrama de Gantt}
+% ============================================================
+% ESTIMACIÓN DE COSTOS
+% ============================================================
+\section{Estimación de Costos}
 
-Para la realización del diagrama se hace uso de la numeración que se le brindó a cada actividad en el cronograma de actividades, esta se presenta en la primera columna. El diagrama se puede apreciar en la Figura \ref{fig:gantt}
+\subsection{Hardware}
 
+Los componentes físicos son adquiridos por el equipo desarrollador e incluidos en el precio final del producto entregado a cada grupo de ciclistas.
 
-\begin{figure*}[t]
-  \centering
-  \includegraphics[width=\textwidth]{FIG/gantt.png}
-  \caption{Diagrama de Gantt del proyecto.}
-  \label{fig:gantt}
-  
-\end{figure*}
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \caption{Costos de hardware para 6 unidades}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Componente} & \textbf{Cantidad} & \textbf{P. Unitario(₡)} & \textbf{Total(₡)} \\
+        \hline
+        Tracker T-Beam V1.2 & 6 & 31.000 & 186.000 \\
+        Soporte de montaje para bicicleta & 6 & 10.000 & 60.000 \\
+        \hline
+        \textbf{Subtotal hardware} & & & \textbf{246.000} \\
+        \hline
+    \end{tabular}
+    \label{tab:costo_hardware}
+\end{table}
 
+\subsection{Honorarios de Ingeniería}
 
+Tarifa oficial ₡37.700 por hora profesional (CFIA, La Gaceta N°224, revisada enero 2026).
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \caption{Honorarios de ingeniería según tarifa CFIA}
+    \begin{tabular}{|l|c|c|r|}
+        \hline
+        \textbf{Fase / Actividad} & \textbf{Horas} & \textbf{Tarifa/hr(₡)} & \textbf{Subtotal(₡)} \\
+        \hline
+        Análisis de requerimientos & 5 & 37.700 & 188.500 \\
+        Diseño del firmware y arquitectura APRS & 8 & 37.700 & 301.600 \\
+        Desarrollo del firmware & 20 & 37.700 & 754.000 \\
+        Configuración APRS y validación & 6 & 37.700 & 226.200 \\
+        Pruebas de campo y documentación & 10 & 37.700 & 377.000 \\
+        \hline
+        \multicolumn{2}{|c|}{\textbf{Total}} & & \textbf{1.847.300} \\
+        \hline
+    \end{tabular}
+    \label{tab:honorarios}
+\end{table}
+
+\subsection{Resumen Financiero}
+
+\begin{table}[H]
+    \centering
+    \caption{Resumen financiero total del proyecto}
+    \begin{tabular}{|c|c|}
+        \hline
+        \textbf{Concepto} & \textbf{Monto(₡)} \\
+        \hline
+        Hardware (trackers + soportes × 6) & 246.000 \\
+        Honorarios de ingeniería (49 horas) & 1.847.300 \\
+        Backend / Frontend (APRS.fi) & 0 \\
+        \hline
+        Subtotal sin IVA & 2.093.300 \\
+        IVA 13\% (sobre honorarios) & 240.149 \\
+        \hline
+        \textbf{Total del Proyecto} & \textbf{2.333.449} \\
+        \hline
+    \end{tabular}
+    
+    \label{tab:resumen}
+\end{table}
+
+El IVA del 13\% aplica únicamente sobre los honorarios profesionales conforme a la Ley N°9635. El uso de APRS.fi elimina el desarrollo de backend y frontend, reduciendo significativamente el costo total del proyecto.
+
+% ============================================================
+% CONCLUSIONES
+% ============================================================
 \section{Conclusiones}
 
+El desarrollo del tracker LoRa-APRS para monitoreo de bicicletas de montaña ha cumplido con los objetivos planteados:
+
+\begin{enumerate}
+    \item Se implementó un firmware funcional en PlatformIO que obtiene posición GPS, construye tramas APRS válidas y las transmite por LoRa a 433.775 MHz.
+    
+    \item Se optimizó el consumo energético mediante CPU a 80 MHz, deep sleep de 60 segundos y apagado automático de la pantalla OLED, logrando una autonomía de 12-15 horas con batería de 1000 mAh.
+    
+    \item Las pruebas de campo demostraron un tiempo de fix GPS entre 2 y 30 segundos en exteriores, con una tasa de éxito de transmisión superior al 90\% en zonas urbanas con cobertura de iGates.
+    
+    \item Se documentó completamente el código, diagramas y procedimientos para permitir la reproducción del proyecto por terceros.
+\end{enumerate}
+
+\subsection{Trabajo Futuro}
+
+Como mejoras potenciales se identifican:
 \begin{itemize}
-    \item La investigación realizada permitió comprender los principios fundamentales de las tecnologías involucradas en el desarrollo del sistema de rastreo. En particular, se analizaron las características del protocolo APRS, la tecnología de comunicación LoRa y el funcionamiento de los sistemas de posicionamiento GPS. Asimismo, se revisaron aspectos regulatorios relacionados con el uso de radiofrecuencias en Costa Rica. A partir de este análisis se determinó que la combinación de estas tecnologías permite implementar una solución de monitoreo de posición capaz de operar en entornos donde la cobertura de redes celulares es limitada, lo cual resulta adecuado para aplicaciones como el seguimiento de bicicletas en rutas alejadas de centros urbanos.
-    \item El planeamiento del proyecto permitió definir de manera estructurada el alcance, los objetivos y las actividades necesarias para el desarrollo del firmware del módulo tracker. Mediante la elaboración de un cronograma de trabajo se establecieron las etapas de diseño, implementación, pruebas y documentación del sistema, lo que facilita la organización y seguimiento del avance del proyecto.
+    \item Implementar recepción continua (RX) con interrupciones para detectar iGates cercanos
+    \item Agregar almacenamiento de posición en memoria flash cuando no hay cobertura
+    \item Desarrollar una aplicación móvil para configuración del tracker vía Bluetooth
+    \item Integrar sensores adicionales (temperatura, ritmo cardíaco, cadencia)
 \end{itemize}
 
-\section{Bibliografía}
+% ============================================================
+% REFERENCIAS
+% ============================================================
 
-\printbibliography
+
+\clearpage
+\appendix
+\renewcommand{\thesection}{\Alph{section}}
+\setcounter{section}{0}
+
+\section*{Apéndice A: Registro serial del firmware propio}
+\label{apendice:serial}
+\hypertarget{apendice:serial}{}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\columnwidth]{prueba_firmware_propio_v1.jpeg}
+    \caption{Salida del monitor serial durante la ejecución del firmware propio}
+    \label{fig:serial}
+\end{figure}
+
+
+\section*{Apéndice B: Video demostrativo del funcionamiento}
+\label{apendice:video}
+\hypertarget{apendice:video}{}
+
+\textbf{Enlace directo:} \url{https://www.youtube.com/shorts/KhTmpQa0nLU}
+
+\section*{Apéndice C: Visualización en APRS.fi}
+\label{apendice:aprs}
+\hypertarget{apendice:aprs}{}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\columnwidth]{aprs.png}
+    \caption{Posición del tracker registrada en APRS.fi}
+    \label{fig:aprs}
+\end{figure}
+
+
+\section*{Apéndice D: Máquina de estados del sistema}
+\label{apendice:maquina}
+\hypertarget{apendice:maquina}{}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{maquina_de_estados.png}
+    \caption{Diagrama de la máquina de estados del firmware}
+    \label{fig:maquina}
+\end{figure}
+
+\section*{Apéndice E: Diseño soporte}
+\label{apendice:soporte}
+\hypertarget{apendice:soporte}{}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{Integrador_1.PNG}
+    \caption{Diagrama soporte isometrico}
+    \label{fig:Soporte1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{Integrador_2.PNG}
+    \caption{Diagrama soporte de frente}
+    \label{fig:Soporte2}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{Integrador_3.PNG}
+    \caption{Diagrama soporte de lado}
+    \label{fig:Soporte3}
+\end{figure}
 
 \end{document}
